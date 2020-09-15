@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group 'sonnicon'
+version '0'
+
+sourceSets.main.java.srcDirs = ['src/main/java']
+sourceSets.main.resources.srcDirs = ['src/main/resources']
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://jitpack.io'
+    }
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.6'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+            'Main-Class': project.group + '.minduslauncher.MindusLauncher'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = jar.manifest.attributes.get('Main-Class')
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.buildDir
+    ignoreExitValue = true
+}

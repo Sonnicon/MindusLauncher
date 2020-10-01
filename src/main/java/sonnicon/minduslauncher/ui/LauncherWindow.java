@@ -8,14 +8,18 @@ import sonnicon.minduslauncher.ui.model.InstanceListSelectionModel;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class LauncherWindow{
     private final JFrame frame;
-
     public final UneditableTable tableInstance;
+
+    private final ArrayList<AbstractButton> editButtons = new ArrayList<>();
+    private File datadir;
 
     public LauncherWindow(){
         frame = new JFrame("MindusLauncher");
@@ -47,9 +51,12 @@ public class LauncherWindow{
         panelButtons.add(runnableButton("Edit", () -> {
             Vars.editWindow.showFor(getSelected());
         }, true));
-        panelButtons.add(new JSeparator());
 
-        panelButtons.add(runnableButton("Mods", () -> {
+
+
+
+
+        /*panelButtons.add(runnableButton("Mods", () -> {
             //todo
         }, true));
         panelButtons.add(runnableButton("Loadermods", () -> {
@@ -60,7 +67,7 @@ public class LauncherWindow{
         }, true));
         panelButtons.add(runnableButton("Maps", () -> {
             //todo
-        }, true));
+        }, true));*/
         panelButtons.add(new JSeparator());
 
         panelButtons.add(runnableButton("Add Official", () -> {
@@ -89,14 +96,34 @@ public class LauncherWindow{
         }, false));
         panelButtons.add(new JSeparator());
 
+
+        if(Desktop.isDesktopSupported()) {
+            JPopupMenu folderMenu = new JPopupMenu();
+            folderMenu.add(openFolderButton("./"));
+            folderMenu.add(openFolderButton("Maps"));
+            folderMenu.add(openFolderButton("Saves"));
+            folderMenu.add(openFolderButton("Schematics"));
+            folderMenu.add(openFolderButton("Mods"));
+            folderMenu.add(openInstanceFolderButton("Instance", ""));
+            folderMenu.add(openInstanceFolderButton("Loader Mods", "loadermods"));
+
+            JButton folderButton = new JButton("Open Folder");
+            folderButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    folderMenu.show(folderButton, e.getX(), e.getY());
+                }
+            });
+            panelButtons.add(folderButton);
+        }
+
         panelButtons.add(runnableButton("Settings", () -> {
             //todo
         }, false));
 
+
         frame.add(BorderLayout.EAST, panelButtons);
     }
-
-    ArrayList<JButton> editButtons = new ArrayList<>();
 
     JButton runnableButton(String text, Runnable onPress, boolean editButton){
         JButton button = new JButton(text);
@@ -112,8 +139,63 @@ public class LauncherWindow{
         return tableInstance.getSelectedRow() == -1 ? null : Vars.instances.get(tableInstance.getSelectedRow());
     }
 
+    JMenuItem openFolderButton(String name){
+        JMenuItem button = new JMenuItem(name);
+        button.addActionListener(a -> desktopOpenData(name));
+        return button;
+    }
+
+    JMenuItem openInstanceFolderButton(String name, String childName){
+        JMenuItem button = new JMenuItem(name);
+        button.addActionListener(a -> {
+            File f = new File(getSelected().file, childName);
+            f.mkdirs();
+            desktopOpen(f);
+        });
+        editButtons.add(button);
+        button.setEnabled(false);
+        return button;
+    }
+
+    private void desktopOpenData(String name){
+        if(datadir == null){
+            String dataDirPath = getDataDirPath();
+            if(dataDirPath.length() == 0) return;
+            datadir = new File(dataDirPath);
+        }
+        desktopOpen(new File(datadir, name.toLowerCase()));
+    }
+
+    private void desktopOpen(File dir){
+        try{
+            Desktop.getDesktop().open(dir);
+        }catch(IOException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Error opening directory.\n" + ex.getMessage());
+        }
+    }
+
+    private String getDataDirPath(){
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win")){
+            return System.getenv("AppData") + "\\\\Mindustry";
+        }else if(os.contains("nix") || os.contains("nux") || os.contains("aix")){
+            if (System.getenv("XDG_DATA_HOME") != null) {
+                String dir = System.getenv("XDG_DATA_HOME");
+                if (!dir.endsWith("/")) dir += "/";
+                return dir + "Mindustry/";
+            }
+            return System.getProperty("user.home") + "/.local/share/Mindustry/";
+        }else if(os.contains("mac")){
+            return System.getProperty("user.home") + "/Library/Application Support/Mindustry/";
+        }else{
+            JOptionPane.showMessageDialog(frame, "Unknown save data location.");
+            return "";
+        }
+    }
+
     public void setEditButtonsEnabled(boolean enabled){
-        for(JButton b : editButtons){
+        for(AbstractButton b : editButtons){
             b.setEnabled(enabled);
         }
     }

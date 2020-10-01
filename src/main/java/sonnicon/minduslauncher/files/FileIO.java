@@ -32,6 +32,7 @@ public class FileIO{
             }
         }
         target.mkdirs();
+        new File(target, "loadermods").mkdir();
 
         return target;
     }

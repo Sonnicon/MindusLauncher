@@ -34,8 +34,9 @@ public class LauncherWindow{
         panelButtons.setLayout(new GridLayout(0, 1));
 
         panelButtons.add(runnableButton("Launch", () -> {
+            Instance selected = getSelected();
             try{
-                Runtime.getRuntime().exec("java -cp \"" + Vars.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "\" sonnicon.minduslauncher.core.MindustryLauncher \"" + getSelected().jar.toPath() + "\"");
+                Runtime.getRuntime().exec("java " + selected.cmdArgs + " -cp \"" + Vars.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "\" sonnicon.minduslauncher.core.MindustryLauncher \"" + selected.jar.toPath() + "\" " + selected.mindustryArgs);
             }catch(IOException e){
                 e.printStackTrace();
             }

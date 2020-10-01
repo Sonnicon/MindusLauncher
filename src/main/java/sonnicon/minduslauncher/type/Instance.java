@@ -15,6 +15,8 @@ import java.util.HashMap;
 public class Instance{
     public String name;
     public String version;
+    public String cmdArgs = "";
+    public String mindustryArgs = "";
     public File file;
     public File jar;
 
@@ -43,6 +45,8 @@ public class Instance{
         this();
         name = map.get("name");
         version = map.get("version");
+        cmdArgs = map.get("cmdargs");
+        mindustryArgs = map.get("mindustryargs");
         this.file = file;
         jar = new File(file, map.get("jar"));
         addToTable();

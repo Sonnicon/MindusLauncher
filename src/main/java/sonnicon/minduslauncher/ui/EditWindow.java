@@ -5,6 +5,7 @@ import sonnicon.minduslauncher.type.Instance;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class EditWindow{
         frame.setSize(400, 400);
         frame.setLayout(new BorderLayout());
 
-        tableEdit = new JTable(new Object[][]{{"Name", "null"}, {"Version", "null"}}, new String[]{"Name", "Value"});
+        tableEdit = new JTable(new Object[][]{{"Name", ""}, {"Version", ""}, {"Cmd Args", ""}, {"Mindustry Args", ""}}, new String[]{"Name", "Value"});
         tableEdit.getTableHeader().setReorderingAllowed(false);
         tableEdit.setColumnSelectionAllowed(false);
         JScrollPane paneInstance = new JScrollPane(tableEdit);
@@ -34,11 +35,19 @@ public class EditWindow{
         panelButtons.setLayout(new GridLayout(0, 3));
 
         panelButtons.add(runnableButton("Apply", () -> {
-            target.name = (String) tableEdit.getModel().getValueAt(0, 1);
-            target.version = (String) tableEdit.getModel().getValueAt(1, 1);
+            //todo clean
+            TableModel editModel = tableEdit.getModel();
+
+            target.name = (String) editModel.getValueAt(0, 1);
+            target.version = (String) editModel.getValueAt(1, 1);
+            target.cmdArgs = (String) editModel.getValueAt(2, 1);
+            target.mindustryArgs = (String) editModel.getValueAt(3, 1);
+
+            TableModel instanceModel = Vars.launcherWindow.tableInstance.getModel();
             int index = Vars.instances.indexOf(target);
-            Vars.launcherWindow.tableInstance.getModel().setValueAt(target.name, index, 0);
-            Vars.launcherWindow.tableInstance.getModel().setValueAt(target.version, index, 1);
+            instanceModel.setValueAt(target.name, index, 0);
+            instanceModel.setValueAt(target.version, index, 1);
+
             frame.setVisible(false);
             Vars.instanceIO.saveInstanceJson(target);
         }));
@@ -70,8 +79,11 @@ public class EditWindow{
 
     public void showFor(Instance i){
         target = i;
-        tableEdit.getModel().setValueAt(i.name, 0, 1);
-        tableEdit.getModel().setValueAt(i.version, 1, 1);
+        TableModel editModel = tableEdit.getModel();
+        editModel.setValueAt(i.name, 0, 1);
+        editModel.setValueAt(i.version, 1, 1);
+        editModel.setValueAt(i.cmdArgs, 2, 1);
+        editModel.setValueAt(i.mindustryArgs, 3, 1);
         frame.setVisible(true);
     }
 }

@@ -2,6 +2,7 @@ package sonnicon.minduslauncher.ui;
 
 import sonnicon.minduslauncher.core.Vars;
 import sonnicon.minduslauncher.type.Instance;
+import sonnicon.minduslauncher.type.Window;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
 import sonnicon.minduslauncher.ui.model.InstanceListSelectionModel;
 
@@ -14,16 +15,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class LauncherWindow{
-    private final JFrame frame;
+public class LauncherWindow extends Window{
     public final UneditableTable tableInstance;
 
     private final ArrayList<AbstractButton> editButtons = new ArrayList<>();
     private File datadir;
 
     public LauncherWindow(){
-        frame = new JFrame("MindusLauncher");
-        frame.setSize(700, 400);
+        super("MindusLauncher");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
@@ -51,23 +50,6 @@ public class LauncherWindow{
         panelButtons.add(runnableButton("Edit", () -> {
             Vars.editWindow.showFor(getSelected());
         }, true));
-
-
-
-
-
-        /*panelButtons.add(runnableButton("Mods", () -> {
-            //todo
-        }, true));
-        panelButtons.add(runnableButton("Loadermods", () -> {
-            //todo
-        }, true));
-        panelButtons.add(runnableButton("Saves", () -> {
-            //todo
-        }, true));
-        panelButtons.add(runnableButton("Maps", () -> {
-            //todo
-        }, true));*/
         panelButtons.add(new JSeparator());
 
         panelButtons.add(runnableButton("Add Official", () -> {
@@ -96,14 +78,10 @@ public class LauncherWindow{
         }, false));
         panelButtons.add(new JSeparator());
 
-
         if(Desktop.isDesktopSupported()) {
             JPopupMenu folderMenu = new JPopupMenu();
-            folderMenu.add(openFolderButton("./"));
-            folderMenu.add(openFolderButton("Maps"));
-            folderMenu.add(openFolderButton("Saves"));
-            folderMenu.add(openFolderButton("Schematics"));
-            folderMenu.add(openFolderButton("Mods"));
+            for(String s : new String[]{"./", "Maps", "Saves", "Schematics", "Mods"})
+                folderMenu.add(openFolderButton(s));
             folderMenu.add(openInstanceFolderButton("Instance", ""));
             folderMenu.add(openInstanceFolderButton("Loader Mods", "loadermods"));
 
@@ -118,11 +96,20 @@ public class LauncherWindow{
         }
 
         panelButtons.add(runnableButton("Settings", () -> {
-            //todo
+            Vars.settingsWindow.show();
         }, false));
 
-
         frame.add(BorderLayout.EAST, panelButtons);
+    }
+
+    @Override
+    protected int defaultWidth() {
+        return 700;
+    }
+
+    @Override
+    protected int defaultHeight() {
+        return 400;
     }
 
     JButton runnableButton(String text, Runnable onPress, boolean editButton){

@@ -2,6 +2,7 @@ package sonnicon.minduslauncher.ui;
 
 import sonnicon.minduslauncher.core.Vars;
 import sonnicon.minduslauncher.type.Instance;
+import sonnicon.minduslauncher.type.Window;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,15 +14,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 
-public class EditWindow{
-    private final JFrame frame;
+public class EditWindow extends Window{
 
     public final JTable tableEdit;
     public Instance target;
 
     public EditWindow(){
-        frame = new JFrame("Edit Instance");
-        frame.setSize(400, 400);
+        super("Edit Instance");
         frame.setLayout(new BorderLayout());
 
         tableEdit = new JTable(new Object[][]{{"Name", ""}, {"Version", ""}, {"Cmd Args", ""}, {"Mindustry Args", ""}}, new String[]{"Name", "Value"});
@@ -70,6 +69,17 @@ public class EditWindow{
 
         frame.add(BorderLayout.SOUTH, panelButtons);
     }
+
+    @Override
+    protected int defaultWidth() {
+        return 400;
+    }
+
+    @Override
+    protected int defaultHeight() {
+        return 400;
+    }
+
 
     JButton runnableButton(String text, Runnable onPress){
         JButton button = new JButton(text);

@@ -3,6 +3,7 @@ package sonnicon.minduslauncher.ui;
 import com.google.gson.internal.LinkedTreeMap;
 import sonnicon.minduslauncher.core.Vars;
 import sonnicon.minduslauncher.type.Instance;
+import sonnicon.minduslauncher.type.Window;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
 
 import javax.swing.*;
@@ -17,8 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class OfficialWindow{
-    private final JFrame frame;
+public class OfficialWindow extends Window{
     public final JTable tableVersion;
 
     private boolean fetched = false;
@@ -27,8 +27,7 @@ public class OfficialWindow{
     private static final HashSet<String> jarnames = new HashSet<String>(Arrays.asList("desktop-release.jar", "Mindustry.jar"));
 
     public OfficialWindow(){
-        frame = new JFrame("Download Official");
-        frame.setSize(300, 400);
+        super("Download Official");
         frame.setLayout(new BorderLayout());
 
         tableVersion = new UneditableTable(new String[]{"Version", "Date"});
@@ -53,6 +52,17 @@ public class OfficialWindow{
 
         frame.add(BorderLayout.SOUTH, panelButtons);
     }
+
+    @Override
+    protected int defaultWidth() {
+        return 300;
+    }
+
+    @Override
+    protected int defaultHeight() {
+        return 400;
+    }
+
 
     JButton runnableButton(String text, Runnable onPress){
         JButton button = new JButton(text);

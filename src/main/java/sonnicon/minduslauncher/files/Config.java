@@ -11,18 +11,23 @@ import java.io.FileWriter;
 
 public class Config {
     protected static File cfg = new File(Vars.rootDir, "config.json");
-    protected String theme = "";
+
+    protected String theme = UIManager.getSystemLookAndFeelClassName();
+    protected boolean openLog = true;
 
     public static Config init(){
         if(cfg.exists()){
-            try {
+            try{
                 Config config = Vars.gson.fromJson(new JsonReader(new FileReader(cfg)), Config.class);
+                if(config == null) return new Config();
+
                 if(config.theme.length() > 0){
                     config.setTheme(config.theme);
                 }
                 return config;
             }catch(Exception ex){
                 ex.printStackTrace();
+                return new Config();
             }
         }
         return new Config();
@@ -37,7 +42,18 @@ public class Config {
             return;
         }
         this.theme = theme;
-        Config.write();
+    }
+
+    public String getTheme(){
+        return theme;
+    }
+
+    public void setOpenLog(boolean open){
+        this.openLog = open;
+    }
+
+    public boolean getOpenLog(){
+        return openLog;
     }
 
     public static void write(){

@@ -1,6 +1,7 @@
 package sonnicon.minduslauncher.ui;
 
 import sonnicon.minduslauncher.core.Vars;
+import sonnicon.minduslauncher.files.Config;
 import sonnicon.minduslauncher.type.Window;
 
 import javax.swing.*;
@@ -14,14 +15,14 @@ public class SettingsWindow extends Window{
         frame.setLayout(new BorderLayout());
 
         JPanel panelSettings = new JPanel();
-        panelSettings.setLayout(new GridLayout(1, 2));
+        panelSettings.setLayout(new GridLayout(2, 2));
         frame.add(panelSettings);
 
+        //Theme
         JLabel themeLabel = new JLabel("Theme");
         panelSettings.add(themeLabel);
 
         UIManager.LookAndFeelInfo[] looksAndFeels = javax.swing.UIManager.getInstalledLookAndFeels();
-
         String[] themes;
         {
             ArrayList<String> themeNames = new ArrayList<>();
@@ -36,12 +37,26 @@ public class SettingsWindow extends Window{
         themeCombobox.addActionListener(
                 e -> Vars.config.setTheme(UIManager.getInstalledLookAndFeels()[themeCombobox.getSelectedIndex()].getClassName()));
 
+        //Open Log
+        JLabel openlogLabel = new JLabel("Open Log");
+        panelSettings.add(openlogLabel);
 
+        JCheckBox openlogCheckbox = new JCheckBox();
+        openlogCheckbox.setSelected(Vars.config.getOpenLog());
+        openlogCheckbox.addActionListener(l -> Vars.config.setOpenLog(openlogCheckbox.isSelected()));
+        panelSettings.add(openlogCheckbox);
+
+        //bottom
         JPanel panelButtons = new JPanel();
-        panelButtons.setLayout(new GridLayout(0, 1));
+        panelButtons.setLayout(new GridLayout(1, 2));
 
-        panelButtons.add(runnableButton("OK", () ->
-            frame.setVisible(false)
+        panelButtons.add(runnableButton("OK", () -> {
+                frame.setVisible(false);
+                Config.write();
+        }));
+
+        panelButtons.add(runnableButton("Cancel", () ->
+                frame.setVisible(false)
         ));
 
         frame.add(BorderLayout.SOUTH, panelButtons);
@@ -54,7 +69,7 @@ public class SettingsWindow extends Window{
 
     @Override
     protected int defaultHeight() {
-        return 100;
+        return 130;
     }
 
 

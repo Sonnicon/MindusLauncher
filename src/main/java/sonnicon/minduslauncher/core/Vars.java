@@ -17,8 +17,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 
 public class Vars{
+    public static String[] args;
+    public static ArgsHandler argsHandler;
+
     public static Gson gson = new Gson();
     public static Config config;
 
@@ -36,7 +40,9 @@ public class Vars{
 
     public static ArrayList<Instance> instances = new ArrayList<>();
 
-    public static void init(){
+    public static void init(String[] arg){
+        args = arg;
+
         try{
             rootDir = createDir(new File(Vars.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile(), "minduslauncher");
         }catch(URISyntaxException ex){
@@ -62,6 +68,8 @@ public class Vars{
         instanceIO = new InstanceIO();
 
         launcherWindow.show();
+
+        argsHandler = new ArgsHandler();
     }
 
     public static File createDir(File file, String child){

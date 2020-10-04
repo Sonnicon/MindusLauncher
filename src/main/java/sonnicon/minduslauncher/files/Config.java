@@ -15,6 +15,9 @@ public class Config {
     protected String theme = UIManager.getSystemLookAndFeelClassName();
     protected boolean openLog = true;
 
+    protected String previous = "";
+    protected boolean selectprevious = false;
+
     public static Config init(){
         if(cfg.exists()){
             try{
@@ -54,6 +57,22 @@ public class Config {
 
     public boolean getOpenLog(){
         return openLog;
+    }
+
+    public void setSelectPrevious(boolean selectprevious){
+        this.selectprevious = selectprevious;
+    }
+
+    public boolean getSelectPrevious(){
+        return selectprevious;
+    }
+
+    public void setPrevious(String previous){
+        this.previous = previous;
+    }
+
+    public String getPrevious(){
+        return previous;
     }
 
     public static void write(){

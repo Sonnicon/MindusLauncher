@@ -117,7 +117,7 @@ public class LauncherWindow extends Window{
         return button;
     }
 
-    Instance getSelected(){
+    public Instance getSelected(){
         return tableInstance.getSelectedRow() == -1 ? null : Vars.instances.get(tableInstance.getSelectedRow());
     }
 

@@ -72,6 +72,10 @@ public class Instance{
 
     public void addToTable(){
         ((DefaultTableModel) Vars.launcherWindow.tableInstance.getModel()).addRow(new Object[]{name, version});
+        if(Vars.config.getSelectPrevious() && Vars.config.getPrevious().equals(file.getName())){
+            int row = Vars.launcherWindow.tableInstance.getRowCount() - 1;
+            Vars.launcherWindow.tableInstance.setRowSelectionInterval(row, row);
+        }
     }
 
     public void launch(){

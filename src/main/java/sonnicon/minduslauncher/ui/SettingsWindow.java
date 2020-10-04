@@ -15,7 +15,7 @@ public class SettingsWindow extends Window{
         frame.setLayout(new BorderLayout());
 
         JPanel panelSettings = new JPanel();
-        panelSettings.setLayout(new GridLayout(2, 2));
+        panelSettings.setLayout(new GridLayout(3, 2));
         frame.add(panelSettings);
 
         //Theme
@@ -46,6 +46,15 @@ public class SettingsWindow extends Window{
         openlogCheckbox.addActionListener(l -> Vars.config.setOpenLog(openlogCheckbox.isSelected()));
         panelSettings.add(openlogCheckbox);
 
+        //Select Previous
+        JLabel selectpreviousLabel = new JLabel("Select Latest On Startup");
+        panelSettings.add(selectpreviousLabel);
+
+        JCheckBox selectpreviousCheckbox = new JCheckBox();
+        selectpreviousCheckbox.setSelected(Vars.config.getSelectPrevious());
+        selectpreviousCheckbox.addActionListener(l -> Vars.config.setSelectPrevious(selectpreviousCheckbox.isSelected()));
+        panelSettings.add(selectpreviousCheckbox);
+
         //bottom
         JPanel panelButtons = new JPanel();
         panelButtons.setLayout(new GridLayout(1, 2));
@@ -69,7 +78,7 @@ public class SettingsWindow extends Window{
 
     @Override
     protected int defaultHeight() {
-        return 130;
+        return 160;
     }
 
 

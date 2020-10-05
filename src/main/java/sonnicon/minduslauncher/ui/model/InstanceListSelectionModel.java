@@ -10,6 +10,7 @@ public class InstanceListSelectionModel extends DefaultListSelectionModel{
         super();
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         addListSelectionListener(e -> {
+            if(!e.getValueIsAdjusting()) return;
             Vars.launcherWindow.setEditButtonsEnabled(true);
             if(Vars.config.getSelectPrevious()){
                 Vars.config.setPrevious(Vars.launcherWindow.getSelected().file.getName());

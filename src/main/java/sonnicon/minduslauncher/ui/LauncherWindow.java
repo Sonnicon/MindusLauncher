@@ -36,20 +36,11 @@ public class LauncherWindow extends Window{
         JPanel panelButtons = new JPanel();
         panelButtons.setLayout(new GridLayout(0, 1));
 
-        panelButtons.add(runnableButton("Launch", () -> {
-            getSelected().launch();
-        }, true));
-        panelButtons.add(runnableButton("Update", () -> {
-            //todo
-        }, true));
-        panelButtons.add(runnableButton("Edit", () -> {
-            Vars.editWindow.showFor(getSelected());
-        }, true));
+        panelButtons.add(runnableButton("Launch", () -> getSelected().launch(), true));
+        panelButtons.add(runnableButton("Edit", () -> Vars.editWindow.showFor(getSelected()), true));
         panelButtons.add(new JSeparator());
 
-        panelButtons.add(runnableButton("Add Official", () -> {
-            Vars.officialWindow.show();
-        }, false));
+        panelButtons.add(runnableButton("Add Official", () -> Vars.officialWindow.show(), false));
         panelButtons.add(runnableButton("Add Jar", () -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileFilter(){
@@ -90,9 +81,7 @@ public class LauncherWindow extends Window{
             panelButtons.add(folderButton);
         }
 
-        panelButtons.add(runnableButton("Settings", () -> {
-            Vars.settingsWindow.show();
-        }, false));
+        panelButtons.add(runnableButton("Settings", () -> Vars.settingsWindow.show(), false));
 
         frame.add(BorderLayout.EAST, panelButtons);
     }
@@ -104,7 +93,7 @@ public class LauncherWindow extends Window{
 
     @Override
     protected int defaultHeight() {
-        return 400;
+        return 350;
     }
 
     JButton runnableButton(String text, Runnable onPress, boolean editButton){

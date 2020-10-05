@@ -51,21 +51,21 @@ public class EditWindow extends Window{
             Vars.instanceIO.saveInstanceJson(target);
         }));
         panelButtons.add(runnableButton("Delete", () -> {
-            int index = Vars.instances.indexOf(target);
-            ((DefaultTableModel)Vars.launcherWindow.tableInstance.getModel()).removeRow(index);
-            Vars.instances.remove(index);
-            try{
-                Files.walk(target.file.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::deleteOnExit);
-                target.file.deleteOnExit();
-            }catch(IOException ex){
-                ex.printStackTrace();
+            if(JOptionPane.showConfirmDialog(frame, "Are you sure you want to permanently delete instance '" + target.name + "'?", "Confirm Delete", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                int index = Vars.instances.indexOf(target);
+                ((DefaultTableModel) Vars.launcherWindow.tableInstance.getModel()).removeRow(index);
+                Vars.instances.remove(index);
+                try{
+                    Files.walk(target.file.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::deleteOnExit);
+                    target.file.deleteOnExit();
+                }catch(IOException ex){
+                    ex.printStackTrace();
+                }
+                frame.setVisible(false);
+                Vars.launcherWindow.setEditButtonsEnabled(false);
             }
-            frame.setVisible(false);
-            Vars.launcherWindow.setEditButtonsEnabled(false);
         }));
-        panelButtons.add(runnableButton("Cancel", () -> {
-            frame.setVisible(false);
-        }));
+        panelButtons.add(runnableButton("Cancel", () -> frame.setVisible(false)));
 
         frame.add(BorderLayout.SOUTH, panelButtons);
     }

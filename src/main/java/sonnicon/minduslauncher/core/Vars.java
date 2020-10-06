@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 
 public class Vars{
     public static String[] args;
@@ -39,6 +38,9 @@ public class Vars{
     public static InstanceIO instanceIO;
 
     public static ArrayList<Instance> instances = new ArrayList<>();
+    public static boolean loaded = false;
+
+    public static boolean loadUI = true;
 
     public static void init(String[] arg){
         args = arg;
@@ -57,19 +59,27 @@ public class Vars{
             ex.printStackTrace();
         }
 
+        argsHandler = new ArgsHandler();
         config = Config.init();
-
-        launcherWindow = new LauncherWindow();
-        editWindow = new EditWindow();
-        officialWindow = new OfficialWindow();
-        settingsWindow = new SettingsWindow();
-
         fileIO = new FileIO();
         instanceIO = new InstanceIO();
 
-        launcherWindow.show();
+        if(loadUI){
+            launcherWindow = new LauncherWindow();
+            editWindow = new EditWindow();
+            officialWindow = new OfficialWindow();
+            settingsWindow = new SettingsWindow();
 
-        argsHandler = new ArgsHandler();
+            for(Instance i : Vars.instances){
+                i.addToTable();
+            }
+
+            loaded = true;
+            launcherWindow.show();
+        }
+
+        argsHandler.loaded();
+
     }
 
     public static File createDir(File file, String child){

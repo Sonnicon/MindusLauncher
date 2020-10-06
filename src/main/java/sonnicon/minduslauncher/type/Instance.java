@@ -40,7 +40,7 @@ public class Instance{
         version = Vars.fileIO.readGameVersion(f);
         f.deleteOnExit();
         Vars.instanceIO.saveInstanceJson(this);
-        addToTable();
+        if(Vars.loaded) addToTable();
     }
 
     public Instance(HashMap<String, String> map, File file){
@@ -51,7 +51,7 @@ public class Instance{
         mindustryArgs = map.get("mindustryargs");
         this.file = file;
         jar = new File(file, map.get("jar"));
-        addToTable();
+        if(Vars.loaded) addToTable();
     }
 
     public static Instance instanceFromURL(String url){
@@ -75,6 +75,7 @@ public class Instance{
         if(Vars.config.getSelectPrevious() && Vars.config.getPrevious().equals(file.getName())){
             int row = Vars.launcherWindow.tableInstance.getRowCount() - 1;
             Vars.launcherWindow.tableInstance.setRowSelectionInterval(row, row);
+            Vars.launcherWindow.setEditButtonsEnabled(true);
         }
     }
 

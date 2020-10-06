@@ -56,7 +56,7 @@ public class Config {
     }
 
     public boolean getOpenLog(){
-        return openLog;
+        return Vars.loadUI && openLog;
     }
 
     public void setSelectPrevious(boolean selectprevious){

@@ -15,7 +15,7 @@ public class SettingsWindow extends Window{
         frame.setLayout(new BorderLayout());
 
         JPanel panelSettings = new JPanel();
-        panelSettings.setLayout(new GridLayout(3, 2));
+        panelSettings.setLayout(new GridLayout(4, 2));
         frame.add(panelSettings);
 
         //Theme
@@ -37,6 +37,7 @@ public class SettingsWindow extends Window{
         themeCombobox.addActionListener(
                 e -> Vars.config.setTheme(UIManager.getInstalledLookAndFeels()[themeCombobox.getSelectedIndex()].getClassName()));
 
+        //todo cleanup
         //Open Log
         JLabel openlogLabel = new JLabel("Open Log");
         panelSettings.add(openlogLabel);
@@ -54,6 +55,15 @@ public class SettingsWindow extends Window{
         selectpreviousCheckbox.setSelected(Vars.config.getSelectPrevious());
         selectpreviousCheckbox.addActionListener(l -> Vars.config.setSelectPrevious(selectpreviousCheckbox.isSelected()));
         panelSettings.add(selectpreviousCheckbox);
+
+        //Select Previous
+        JLabel popupNewTagLabel = new JLabel("Popup New Versions On Startup");
+        panelSettings.add(popupNewTagLabel);
+
+        JCheckBox popupNewTagCheckbox = new JCheckBox();
+        popupNewTagCheckbox.setSelected(Vars.config.getPopupLatestTag());
+        popupNewTagCheckbox.addActionListener(l -> Vars.config.setPopupLatestTag(popupNewTagCheckbox.isSelected()));
+        panelSettings.add(popupNewTagCheckbox);
 
         //bottom
         JPanel panelButtons = new JPanel();
@@ -78,7 +88,7 @@ public class SettingsWindow extends Window{
 
     @Override
     protected int defaultHeight() {
-        return 160;
+        return 190;
     }
 
 

@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
+//todo rewrite
 public class Config {
     protected static File cfg = new File(Vars.rootDir, "config.json");
 
@@ -17,6 +18,9 @@ public class Config {
 
     protected String previous = "";
     protected boolean selectprevious = false;
+
+    protected String latestTag = "";
+    protected boolean popupLatestTag = true;
 
     public static Config init(){
         if(cfg.exists()){
@@ -73,6 +77,22 @@ public class Config {
 
     public String getPrevious(){
         return previous;
+    }
+
+    public void setPopupLatestTag(boolean popupLatestTag){
+        this.popupLatestTag = popupLatestTag;
+    }
+
+    public boolean getPopupLatestTag(){
+        return popupLatestTag;
+    }
+
+    public void setLatestTag(String tag){
+        this.latestTag = tag;
+    }
+
+    public String getLatestTag(){
+        return latestTag;
     }
 
     public static void write(){

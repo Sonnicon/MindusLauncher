@@ -1,6 +1,8 @@
 package sonnicon.minduslauncher.ui;
 
+import com.google.gson.internal.LinkedTreeMap;
 import sonnicon.minduslauncher.core.Vars;
+import sonnicon.minduslauncher.files.Config;
 import sonnicon.minduslauncher.type.Instance;
 import sonnicon.minduslauncher.type.Window;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
@@ -11,8 +13,12 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class LauncherWindow extends Window{
@@ -84,6 +90,36 @@ public class LauncherWindow extends Window{
         panelButtons.add(runnableButton("Settings", () -> Vars.settingsWindow.show(), false));
 
         frame.add(BorderLayout.EAST, panelButtons);
+
+        if(Vars.config.getPopupLatestTag()){
+            try{
+                HttpURLConnection con = (HttpURLConnection) new URL("https://api.github.com/repos/Anuken/Mindustry/releases?per_page=1").openConnection();
+                con.setRequestMethod("GET");
+                con.connect();
+                BufferedReader json = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                //todo excluder
+                ArrayList data = Vars.gson.fromJson(json, ArrayList.class);
+                String tag = (String) ((LinkedTreeMap) data.get(0)).get("tag_name");
+                if(!tag.equals(Vars.config.getLatestTag())){
+                    int option = JOptionPane.showOptionDialog(frame,
+                            "Mindustry has released tag '" + tag + "'.",
+                            "New Mindustry Version",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            new String[]{"OK", "Remind Me Later"},
+                            "OK");
+
+                    if(option == 0){
+                        Vars.config.setLatestTag(tag);
+                        Config.write();
+                    }
+                }
+            }catch(Exception ex){
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(frame, "Error fetching latest release.\n" + ex.getMessage());
+            }
+        }
     }
 
     @Override

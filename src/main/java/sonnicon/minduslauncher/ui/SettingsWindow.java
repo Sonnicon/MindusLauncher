@@ -1,12 +1,11 @@
 package sonnicon.minduslauncher.ui;
 
 import sonnicon.minduslauncher.core.Vars;
-import sonnicon.minduslauncher.files.Config;
+import sonnicon.minduslauncher.type.config.Setting;
 import sonnicon.minduslauncher.type.Window;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class SettingsWindow extends Window{
 
@@ -18,52 +17,10 @@ public class SettingsWindow extends Window{
         panelSettings.setLayout(new GridLayout(4, 2));
         frame.add(panelSettings);
 
-        //Theme
-        JLabel themeLabel = new JLabel("Theme");
-        panelSettings.add(themeLabel);
-
-        UIManager.LookAndFeelInfo[] looksAndFeels = javax.swing.UIManager.getInstalledLookAndFeels();
-        String[] themes;
-        {
-            ArrayList<String> themeNames = new ArrayList<>();
-            for (UIManager.LookAndFeelInfo lafi : looksAndFeels) {
-                themeNames.add(lafi.getName());
-            }
-            themes = themeNames.toArray(new String[]{});
+        for(Setting<?> s : Vars.config.settings()){
+            s.label(panelSettings);
+            s.component(panelSettings);
         }
-        JComboBox<String> themeCombobox = new JComboBox<>(themes);
-        panelSettings.add(themeCombobox);
-        themeCombobox.setSelectedItem(UIManager.getLookAndFeel().getName());
-        themeCombobox.addActionListener(
-                e -> Vars.config.setTheme(UIManager.getInstalledLookAndFeels()[themeCombobox.getSelectedIndex()].getClassName()));
-
-        //todo cleanup
-        //Open Log
-        JLabel openlogLabel = new JLabel("Open Log");
-        panelSettings.add(openlogLabel);
-
-        JCheckBox openlogCheckbox = new JCheckBox();
-        openlogCheckbox.setSelected(Vars.config.getOpenLog());
-        openlogCheckbox.addActionListener(l -> Vars.config.setOpenLog(openlogCheckbox.isSelected()));
-        panelSettings.add(openlogCheckbox);
-
-        //Select Previous
-        JLabel selectpreviousLabel = new JLabel("Select Latest On Startup");
-        panelSettings.add(selectpreviousLabel);
-
-        JCheckBox selectpreviousCheckbox = new JCheckBox();
-        selectpreviousCheckbox.setSelected(Vars.config.getSelectPrevious());
-        selectpreviousCheckbox.addActionListener(l -> Vars.config.setSelectPrevious(selectpreviousCheckbox.isSelected()));
-        panelSettings.add(selectpreviousCheckbox);
-
-        //Select Previous
-        JLabel popupNewTagLabel = new JLabel("Popup New Versions On Startup");
-        panelSettings.add(popupNewTagLabel);
-
-        JCheckBox popupNewTagCheckbox = new JCheckBox();
-        popupNewTagCheckbox.setSelected(Vars.config.getPopupLatestTag());
-        popupNewTagCheckbox.addActionListener(l -> Vars.config.setPopupLatestTag(popupNewTagCheckbox.isSelected()));
-        panelSettings.add(popupNewTagCheckbox);
 
         //bottom
         JPanel panelButtons = new JPanel();
@@ -71,7 +28,7 @@ public class SettingsWindow extends Window{
 
         panelButtons.add(runnableButton("OK", () -> {
                 frame.setVisible(false);
-                Config.write();
+                Vars.config.write();
         }));
 
         panelButtons.add(runnableButton("Cancel", () ->
@@ -88,7 +45,7 @@ public class SettingsWindow extends Window{
 
     @Override
     protected int defaultHeight() {
-        return 190;
+        return 70 + Vars.config.settings().length * 30;
     }
 
 

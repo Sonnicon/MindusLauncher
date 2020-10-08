@@ -2,7 +2,6 @@ package sonnicon.minduslauncher.ui;
 
 import com.google.gson.internal.LinkedTreeMap;
 import sonnicon.minduslauncher.core.Vars;
-import sonnicon.minduslauncher.files.Config;
 import sonnicon.minduslauncher.type.Instance;
 import sonnicon.minduslauncher.type.Window;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
@@ -91,7 +90,7 @@ public class LauncherWindow extends Window{
 
         frame.add(BorderLayout.EAST, panelButtons);
 
-        if(Vars.config.getPopupLatestTag()){
+        if((boolean) Vars.config.get("popupLatestTag")){
             try{
                 HttpURLConnection con = (HttpURLConnection) new URL("https://api.github.com/repos/Anuken/Mindustry/releases?per_page=1").openConnection();
                 con.setRequestMethod("GET");
@@ -100,7 +99,7 @@ public class LauncherWindow extends Window{
                 //todo excluder
                 ArrayList data = Vars.gson.fromJson(json, ArrayList.class);
                 String tag = (String) ((LinkedTreeMap) data.get(0)).get("tag_name");
-                if(!tag.equals(Vars.config.getLatestTag())){
+                if(!tag.equals(Vars.config.get("latestTag"))){
                     int option = JOptionPane.showOptionDialog(frame,
                             "Mindustry has released tag '" + tag + "'.",
                             "New Mindustry Version",
@@ -111,8 +110,8 @@ public class LauncherWindow extends Window{
                             "OK");
 
                     if(option == 0){
-                        Vars.config.setLatestTag(tag);
-                        Config.write();
+                        Vars.config.set("latestTag", tag);
+                        Vars.config.write();
                     }
                 }
             }catch(Exception ex){

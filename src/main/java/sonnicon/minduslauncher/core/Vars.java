@@ -60,7 +60,8 @@ public class Vars{
         }
 
         argsHandler = new ArgsHandler();
-        config = Config.init();
+        config = new Config();
+        config.init();
         fileIO = new FileIO();
         instanceIO = new InstanceIO();
 

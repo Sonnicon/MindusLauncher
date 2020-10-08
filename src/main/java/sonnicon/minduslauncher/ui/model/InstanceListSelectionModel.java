@@ -1,8 +1,6 @@
 package sonnicon.minduslauncher.ui.model;
 
 import sonnicon.minduslauncher.core.Vars;
-import sonnicon.minduslauncher.files.Config;
-
 import javax.swing.*;
 
 public class InstanceListSelectionModel extends DefaultListSelectionModel{
@@ -12,9 +10,9 @@ public class InstanceListSelectionModel extends DefaultListSelectionModel{
         addListSelectionListener(e -> {
             if(!e.getValueIsAdjusting()) return;
             Vars.launcherWindow.setEditButtonsEnabled(true);
-            if(Vars.config.getSelectPrevious()){
-                Vars.config.setPrevious(Vars.launcherWindow.getSelected().file.getName());
-                Config.write();
+            if((boolean) Vars.config.get("selectPrevious")){
+                Vars.config.set("previous", Vars.launcherWindow.getSelected().file.getName());
+                Vars.config.write();
             }
         });
     }

@@ -72,7 +72,7 @@ public class Instance{
 
     public void addToTable(){
         ((DefaultTableModel) Vars.launcherWindow.tableInstance.getModel()).addRow(new Object[]{name, version});
-        if(Vars.config.getSelectPrevious() && Vars.config.getPrevious().equals(file.getName())){
+        if((boolean) Vars.config.get("selectPrevious") && Vars.config.get("previous").equals(file.getName())){
             int row = Vars.launcherWindow.tableInstance.getRowCount() - 1;
             Vars.launcherWindow.tableInstance.setRowSelectionInterval(row, row);
             Vars.launcherWindow.setEditButtonsEnabled(true);
@@ -93,7 +93,7 @@ public class Instance{
             builder.redirectErrorStream(true);
 
             Process process = builder.start();
-            if(Vars.config.getOpenLog())
+            if((boolean) Vars.config.get("openLog"))
                 new LogWindow(name, process);
         }catch(IOException e){
             e.printStackTrace();

@@ -3,8 +3,11 @@ package sonnicon.minduslauncher.ui;
 import sonnicon.minduslauncher.type.Window;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class LogWindow extends Window{
 
@@ -15,11 +18,12 @@ public class LogWindow extends Window{
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
 
-        JTextArea log = new JTextArea();
-        log.setEditable(false);
+        JTextPane log = new JTextPane();
+        StyledDocument document = log.getStyledDocument();
         JScrollPane logPane = new JScrollPane(log);
         logPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         frame.add(logPane);
+        log.setAutoscrolls(true);
 
         JPanel panelButtons = new JPanel();
         panelButtons.setLayout(new GridLayout(0, 3));
@@ -41,23 +45,26 @@ public class LogWindow extends Window{
 
         frame.add(BorderLayout.SOUTH, panelButtons);
 
-        Scanner s = new Scanner(process.getInputStream());
+        Style style = new StyleContext().addStyle("log", null);
+        BufferedReader inp = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        BufferedReader err = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         new Thread(() -> {
             while(process.isAlive() && frame.isDisplayable()){
-                if(s.hasNextLine()){
-                    log.append(s.nextLine() + "\n");
-                    log.setCaretPosition(log.getDocument().getLength());
-                }else{
-                    try{
+                try{
+                    boolean b = inp.ready();
+                    if(b || err.ready()){
+                        StyleConstants.setForeground(style, b ? Color.BLACK : Color.RED);
+                        document.insertString(document.getLength(), (b ? inp.readLine() : err.readLine()) + "\n", style);
+                        log.setCaretPosition(document.getLength());
+                    }else{
                         Thread.sleep(500);
-                    }catch(InterruptedException ignored){}
-                }
+                    }
+                }catch(InterruptedException | IOException | BadLocationException ignored){}
             }
             if(!process.isAlive()){
                 buttonKill.setEnabled(false);
             }
         }).start();
-
     }
 
     @Override

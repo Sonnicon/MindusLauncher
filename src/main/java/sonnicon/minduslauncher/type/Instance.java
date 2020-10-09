@@ -90,7 +90,6 @@ public class Instance{
                     jar.getAbsolutePath(),
                     mindustryArgs);
             builder.directory(file);
-            builder.redirectErrorStream(true);
 
             Process process = builder.start();
             if((boolean) Vars.config.get("openLog"))

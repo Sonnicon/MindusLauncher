@@ -2,8 +2,8 @@ package sonnicon.minduslauncher.ui;
 
 import com.google.gson.internal.LinkedTreeMap;
 import sonnicon.minduslauncher.core.Vars;
+import sonnicon.minduslauncher.type.FrameWindow;
 import sonnicon.minduslauncher.type.Instance;
-import sonnicon.minduslauncher.type.Window;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
 import sonnicon.minduslauncher.ui.model.InstanceListSelectionModel;
 
@@ -20,7 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class LauncherWindow extends Window{
+public class LauncherWindow extends FrameWindow{
     public final UneditableTable tableInstance;
 
     private final ArrayList<AbstractButton> editButtons = new ArrayList<>();
@@ -208,5 +208,9 @@ public class LauncherWindow extends Window{
 
     public void show(){
         frame.setVisible(true);
+    }
+
+    public JFrame getFrame(){
+        return frame;
     }
 }

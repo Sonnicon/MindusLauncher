@@ -3,15 +3,13 @@ package sonnicon.minduslauncher.type;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public abstract class Window {
-    protected JFrame frame;
+public abstract class Window<T extends java.awt.Window>{
+    protected T frame;
 
-    protected static ArrayList<Window> windows = new ArrayList<>();
+    protected static ArrayList<Window<?>> windows = new ArrayList<>();
 
-    public Window(String name){
+    public Window(){
         windows.add(this);
-        frame = new JFrame(name);
-        applySize();
     }
 
     protected abstract int defaultWidth();
@@ -29,7 +27,7 @@ public abstract class Window {
     }
 
     public static void updateAll(){
-        for(Window w : windows){
+        for(Window<?> w : windows){
             w.update();
         }
     }

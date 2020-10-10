@@ -2,7 +2,7 @@ package sonnicon.minduslauncher.ui;
 
 import sonnicon.minduslauncher.core.Vars;
 import sonnicon.minduslauncher.type.Instance;
-import sonnicon.minduslauncher.type.Window;
+import sonnicon.minduslauncher.type.ModalWindow;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 
-public class EditWindow extends Window{
+public class EditWindow extends ModalWindow{
 
     public final JTable tableEdit;
     public Instance target;

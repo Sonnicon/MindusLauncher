@@ -3,7 +3,7 @@ package sonnicon.minduslauncher.ui;
 import com.google.gson.internal.LinkedTreeMap;
 import sonnicon.minduslauncher.core.Vars;
 import sonnicon.minduslauncher.type.Instance;
-import sonnicon.minduslauncher.type.Window;
+import sonnicon.minduslauncher.type.ModalWindow;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class OfficialWindow extends Window{
+public class OfficialWindow extends ModalWindow{
     public final JTable tableVersion;
 
     private boolean fetched = false;

@@ -1,13 +1,13 @@
 package sonnicon.minduslauncher.ui;
 
 import sonnicon.minduslauncher.core.Vars;
+import sonnicon.minduslauncher.type.ModalWindow;
 import sonnicon.minduslauncher.type.config.Setting;
-import sonnicon.minduslauncher.type.Window;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SettingsWindow extends Window{
+public class SettingsWindow extends ModalWindow{
 
     public SettingsWindow(){
         super("Settings");

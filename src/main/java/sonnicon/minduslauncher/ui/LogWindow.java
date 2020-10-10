@@ -1,5 +1,6 @@
 package sonnicon.minduslauncher.ui;
 
+import sonnicon.minduslauncher.type.FrameWindow;
 import sonnicon.minduslauncher.type.Window;
 
 import javax.swing.*;
@@ -9,8 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class LogWindow extends Window{
-
+public class LogWindow extends FrameWindow{
 
     public LogWindow(String name, Process process){
         super(name);

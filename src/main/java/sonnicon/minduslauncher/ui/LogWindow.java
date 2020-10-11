@@ -1,7 +1,6 @@
 package sonnicon.minduslauncher.ui;
 
 import sonnicon.minduslauncher.type.FrameWindow;
-import sonnicon.minduslauncher.type.Window;
 
 import javax.swing.*;
 import javax.swing.text.*;

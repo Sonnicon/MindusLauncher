@@ -12,20 +12,30 @@ public class ArgsHandler{
             switch(Vars.args[i]){
                 case("-launch"):{
                     if(Vars.args.length >= ++i){
-                        int finalI = i;
-                        onLoaded.add(() -> {
-                            boolean found = false;
-                            for(Instance instance : Vars.instances){
-                                if(instance.file.getName().equals(Vars.args[finalI])){
-                                    instance.launch();
-                                    found = true;
-                                    break;
+                        if(Vars.args[i].equals("-downloadurl")){
+                            if(Vars.args.length >= i + 1){
+                                int finalI = ++i;
+                                onLoaded.add(() -> Instance.instanceFromURL(Vars.args[finalI]).launch());
+                            }else{
+                                System.out.println("Please provide URL for for '-downloadurl' arg");
+                            }
+                        }else{
+                            int finalI = i;
+                            onLoaded.add(() -> {
+                                boolean found = false;
+                                for(Instance instance : Vars.instances){
+                                    if(instance.file.getName().equals(Vars.args[finalI])){
+                                        instance.launch();
+                                        found = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if(!found){
-                                System.out.println("Unable to find instance '" + Vars.args[finalI] + "' for 'launch' arg");
-                            }
-                        });
+                                if(!found){
+                                    System.out.println("Unable to find instance '" + Vars.args[finalI] + "' for 'launch' arg");
+                                }
+
+                            });
+                        }
                     }else{
                         System.out.println("Missing instance name for 'launch' arg.");
                     }

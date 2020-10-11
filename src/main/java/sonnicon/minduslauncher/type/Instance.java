@@ -92,7 +92,7 @@ public class Instance{
             builder.directory(file);
 
             Process process = builder.start();
-            if((boolean) Vars.config.get("openLog"))
+            if((boolean) Vars.config.get("openLog") && Vars.loadUI)
                 new LogWindow(name, process);
         }catch(IOException e){
             e.printStackTrace();

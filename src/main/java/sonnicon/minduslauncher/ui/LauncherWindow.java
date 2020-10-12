@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class LauncherWindow extends FrameWindow{
     public final UneditableTable tableInstance;
@@ -115,7 +116,7 @@ public class LauncherWindow extends FrameWindow{
                     }
                 }
             }catch(Exception ex){
-                ex.printStackTrace();
+                Logger.getLogger(getClass().getName()).warning(ex.toString());
                 JOptionPane.showMessageDialog(frame, "Error fetching latest release.\n" + ex.getMessage());
             }
         }
@@ -176,7 +177,7 @@ public class LauncherWindow extends FrameWindow{
         try{
             Desktop.getDesktop().open(dir);
         }catch(IOException ex){
-            ex.printStackTrace();
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
             JOptionPane.showMessageDialog(frame, "Error opening directory.\n" + ex.getMessage());
         }
     }

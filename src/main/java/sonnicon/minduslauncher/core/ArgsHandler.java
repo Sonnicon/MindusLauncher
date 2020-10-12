@@ -3,10 +3,12 @@ package sonnicon.minduslauncher.core;
 import sonnicon.minduslauncher.type.Instance;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class ArgsHandler{
     private ArrayList<Runnable> onLoaded = new ArrayList<>();
 
+    //todo rewrite
     public ArgsHandler(){
         for(int i = 0; i < Vars.args.length; i++){
             switch(Vars.args[i]){
@@ -17,7 +19,7 @@ public class ArgsHandler{
                                 int finalI = ++i;
                                 onLoaded.add(() -> Instance.instanceFromURL(Vars.args[finalI]).launch());
                             }else{
-                                System.out.println("Please provide URL for for '-downloadurl' arg");
+                                Logger.getLogger(getClass().getName()).warning("Please provide URL for for '-downloadurl' arg");
                             }
                         }else{
                             int finalI = i;
@@ -31,13 +33,13 @@ public class ArgsHandler{
                                     }
                                 }
                                 if(!found){
-                                    System.out.println("Unable to find instance '" + Vars.args[finalI] + "' for 'launch' arg");
+                                    Logger.getLogger(getClass().getName()).warning("Unable to find instance '" + Vars.args[finalI] + "' for 'launch' arg");
                                 }
 
                             });
                         }
                     }else{
-                        System.out.println("Missing instance name for 'launch' arg.");
+                        Logger.getLogger(getClass().getName()).warning("Missing instance name for 'launch' arg.");
                     }
                     break;
                 }
@@ -47,7 +49,7 @@ public class ArgsHandler{
                 }
 
                 default:{
-                    System.out.println("Unknown arg '" + Vars.args[i] + "'");
+                    Logger.getLogger(getClass().getName()).severe("Unknown arg '" + Vars.args[i] + "'");
                     System.exit(64);
                 }
             }

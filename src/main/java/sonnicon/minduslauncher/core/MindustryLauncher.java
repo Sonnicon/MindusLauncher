@@ -6,6 +6,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 
 public class MindustryLauncher{
     public static void main(String[] args){
@@ -37,7 +38,7 @@ public class MindustryLauncher{
             Class c = Class.forName(mainClass, true, classloader);
             c.getMethod("main", String[].class).invoke(null, new Object[]{Arrays.copyOfRange(args, 1, args.length)});
         }catch(Exception ex){
-            ex.printStackTrace();
+            Logger.getLogger(MindustryLauncher.class.getName()).severe(ex.toString());
         }
     }
 }

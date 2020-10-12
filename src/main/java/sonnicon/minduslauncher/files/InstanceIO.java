@@ -6,6 +6,7 @@ import sonnicon.minduslauncher.type.Instance;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 @SuppressWarnings("unchecked")
 public class InstanceIO{
@@ -21,7 +22,7 @@ public class InstanceIO{
                 new Instance(Vars.gson.fromJson(reader, HashMap.class), f);
                 reader.close();
             }catch(Exception ex){
-                ex.printStackTrace();
+                Logger.getLogger(getClass().getName()).warning(ex.toString());
             }
         }
     }
@@ -38,7 +39,7 @@ public class InstanceIO{
             Vars.gson.toJson(map, writer);
             writer.close();
         }catch(IOException ex){
-            ex.printStackTrace();
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
         }
     }
 }

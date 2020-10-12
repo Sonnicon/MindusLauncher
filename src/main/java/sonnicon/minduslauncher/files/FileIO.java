@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -53,7 +54,7 @@ public class FileIO{
             reader.close();
             return result[0] + " b" + result[1];
         }catch(IOException ex){
-            ex.printStackTrace();
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
             return null;
         }
     }

@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.logging.Logger;
 
 public class Vars{
     public static String[] args;
@@ -48,7 +49,7 @@ public class Vars{
         try{
             rootDir = createDir(new File(Vars.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile(), "minduslauncher");
         }catch(URISyntaxException ex){
-            ex.printStackTrace();
+            Logger.getLogger(Vars.class.getName()).severe(ex.toString());
             System.exit(0);
         }
         instanceDir = createDir(rootDir, "instances");
@@ -56,7 +57,7 @@ public class Vars{
         try{
             Files.walk(tempDir.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::deleteOnExit);
         }catch(IOException ex){
-            ex.printStackTrace();
+            Logger.getLogger(Vars.class.getName()).warning(ex.toString());
         }
 
         argsHandler = new ArgsHandler();

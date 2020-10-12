@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.logging.Logger;
 
 public class EditWindow extends ModalWindow{
 
@@ -59,7 +60,7 @@ public class EditWindow extends ModalWindow{
                     Files.walk(target.file.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::deleteOnExit);
                     target.file.deleteOnExit();
                 }catch(IOException ex){
-                    ex.printStackTrace();
+                    Logger.getLogger(getClass().getName()).warning(ex.toString());
                 }
                 frame.setVisible(false);
                 Vars.launcherWindow.setEditButtonsEnabled(false);

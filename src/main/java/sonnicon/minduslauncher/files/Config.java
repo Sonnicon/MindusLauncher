@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class Config {
     protected File cfg = new File(Vars.rootDir, "config.json");
@@ -28,7 +29,7 @@ public class Config {
             try{
                  read = Vars.gson.fromJson(new JsonReader(new FileReader(cfg)), HashMap.class);
             }catch(Exception ex){
-                ex.printStackTrace();
+                Logger.getLogger(getClass().getName()).warning(ex.toString());
             }
         }
 
@@ -100,7 +101,7 @@ public class Config {
             Vars.gson.toJson(map, writer);
             writer.close();
         }catch(Exception ex){
-            ex.printStackTrace();
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
         }
     }
 
@@ -110,7 +111,7 @@ public class Config {
             Window.updateAll();
             return true;
         }catch (Exception ex){
-            ex.printStackTrace();
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
             return false;
         }
     }

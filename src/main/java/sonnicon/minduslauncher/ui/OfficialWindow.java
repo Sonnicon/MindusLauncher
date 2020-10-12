@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 public class OfficialWindow extends ModalWindow{
     public final JTable tableVersion;
@@ -96,7 +97,7 @@ public class OfficialWindow extends ModalWindow{
             }
             con.disconnect();
         }catch(Exception ex){
-            ex.printStackTrace();
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
             JOptionPane.showMessageDialog(frame, "Error fetching releases.\n" + ex.getMessage());
         }
     }

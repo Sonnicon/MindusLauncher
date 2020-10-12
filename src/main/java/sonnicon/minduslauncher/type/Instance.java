@@ -13,6 +13,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class Instance{
     public String name;
@@ -32,7 +33,7 @@ public class Instance{
         try{
             Files.copy(f.toPath(), new File(file, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
         }catch(IOException ex){
-            ex.printStackTrace();
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
             return;
         }
         jar = new File(file, f.getName());
@@ -65,7 +66,7 @@ public class Instance{
             rbc.close();
             return new Instance(target);
         }catch(Exception ex){
-            ex.printStackTrace();
+            Logger.getLogger(Instance.class.getName()).warning(ex.toString());
             return null;
         }
     }
@@ -94,8 +95,8 @@ public class Instance{
             Process process = builder.start();
             if((boolean) Vars.config.get("openLog") && Vars.loadUI)
                 new LogWindow(name, process);
-        }catch(IOException e){
-            e.printStackTrace();
+        }catch(IOException ex){
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
         }
     }
 }

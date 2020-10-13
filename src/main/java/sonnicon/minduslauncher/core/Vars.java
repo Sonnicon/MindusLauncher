@@ -60,11 +60,13 @@ public class Vars{
             Logger.getLogger(Vars.class.getName()).warning(ex.toString());
         }
 
-        argsHandler = new ArgsHandler();
         config = new Config();
         config.init();
         fileIO = new FileIO();
         instanceIO = new InstanceIO();
+
+        argsHandler = new ArgsHandler();
+        argsHandler.init();
 
         if(loadUI){
             launcherWindow = new LauncherWindow();

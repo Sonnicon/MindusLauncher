@@ -1,6 +1,7 @@
 package sonnicon.minduslauncher.core;
 
 import sonnicon.minduslauncher.type.Command;
+import sonnicon.minduslauncher.type.HelpCommand;
 import sonnicon.minduslauncher.type.Instance;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public class ArgsHandler{
 
         // create commands
 
+        new HelpCommand("help").setDesc("Displays a tree of commands with descriptions");
+
         Command launch = new Command("launch"){
             @Override
             public Object call(Object child){
@@ -24,7 +27,7 @@ public class ArgsHandler{
                     ((Instance) child).launch();
                 return null;
             }
-        };
+        }.setDesc("Launch the game");
 
         new Command("instance", launch){
             @Override
@@ -37,14 +40,14 @@ public class ArgsHandler{
                 Logger.getLogger(getClass().getName()).warning("Unable to find instance '" + child + "' for 'launch' arg");
                 return null;
             }
-        }.setHasChildValue(true);
+        }.setHasChildValue(true).setDesc("Use an existing instance");
 
         new Command("download", launch){
             @Override
             public Object call(Object child){
                 return Instance.instanceFromURL((String) child);
             }
-        }.setHasChildValue(true);
+        }.setHasChildValue(true).setDesc("Download an URL and create a new instance");
 
 
         new Command("noui"){
@@ -53,10 +56,7 @@ public class ArgsHandler{
                 Vars.loadUI = false;
                 return null;
             }
-        };
-
-        //todo help command
-
+        }.setDesc("Don't initialize or open any UI");
 
         // run commands
 
@@ -82,5 +82,9 @@ public class ArgsHandler{
 
     public void addCommand(String key, Command command){
         commands.put(key, command);
+    }
+
+    public HashMap<String, Command> getCommands(){
+        return commands;
     }
 }

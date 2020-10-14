@@ -12,6 +12,8 @@ public class Command{
     protected HashMap<String, Command> childCommands;
     protected boolean hasChildValue = false;
 
+    public String desc = "No description.";
+
     public Command(){
     }
 
@@ -63,6 +65,12 @@ public class Command{
 
     public Command setHasChildValue(boolean childValue){
         this.hasChildValue = childValue;
+        return this;
+    }
+
+    public Command setDesc(String desc){
+        // epic optimization
+        this.desc = desc + ".";
         return this;
     }
 

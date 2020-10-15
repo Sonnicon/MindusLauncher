@@ -1,12 +1,11 @@
 package sonnicon.minduslauncher.type;
 
 import sonnicon.minduslauncher.core.Vars;
-import sonnicon.minduslauncher.ui.LogWindow;
+import sonnicon.minduslauncher.ui.windows.LogWindow;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -57,6 +56,9 @@ public class Instance{
 
     public static Instance instanceFromURL(String url){
         String filename = url.substring(url.lastIndexOf("/"));
+        if(!url.endsWith(".jar")){
+            System.out.println("Not valid URL to JAR file.");
+        }
         File target = new File(Vars.tempDir, filename);
         try{
             ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream());
@@ -73,11 +75,15 @@ public class Instance{
 
     public void addToTable(){
         ((DefaultTableModel) Vars.launcherWindow.tableInstance.getModel()).addRow(new Object[]{name, version});
-        if((boolean) Vars.config.get("selectPrevious") && Vars.config.get("previous").equals(file.getName())){
-            int row = Vars.launcherWindow.tableInstance.getRowCount() - 1;
-            Vars.launcherWindow.tableInstance.setRowSelectionInterval(row, row);
-            Vars.launcherWindow.setEditButtonsEnabled(true);
+        if(Vars.loaded || ((boolean) Vars.config.get("selectPrevious") && Vars.config.get("previous").equals(file.getName()))){
+            select();
         }
+    }
+
+    private void select(){
+        int row = Vars.launcherWindow.tableInstance.getRowCount() - 1;
+        Vars.launcherWindow.tableInstance.setRowSelectionInterval(row, row);
+        Vars.launcherWindow.setEditButtonsEnabled(true);
     }
 
     public void launch(){

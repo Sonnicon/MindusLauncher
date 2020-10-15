@@ -1,6 +1,8 @@
 package sonnicon.minduslauncher.files;
 
 import sonnicon.minduslauncher.core.Vars;
+
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.zip.ZipFile;
 
 public class FileIO{
     private static final Pattern filenamePattern = Pattern.compile("\\([0-9]+\\)\\Z");
+    private static File datadir;
 
     public File createInstanceDir(String jarname){
         if(jarname == null || jarname.length() == 0 || !jarname.endsWith(".jar")) return null;
@@ -57,5 +60,34 @@ public class FileIO{
             Logger.getLogger(getClass().getName()).warning(ex.toString());
             return null;
         }
+    }
+
+    public static File getDatadir(){
+        if(datadir == null){
+            String p = getDatadirPath();
+            if(p.length() == 0){
+                JOptionPane.showMessageDialog(Vars.launcherWindow.getFrame(), "Unknown save data location.");
+            }else{
+                datadir = new File(getDatadirPath());
+            }
+        }
+        return datadir;
+    }
+
+    private static String getDatadirPath(){
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.contains("win")){
+            return System.getenv("AppData") + "\\\\Mindustry";
+        }else if(os.contains("nix") || os.contains("nux") || os.contains("aix")){
+            if (System.getenv("XDG_DATA_HOME") != null) {
+                String dir = System.getenv("XDG_DATA_HOME");
+                if (!dir.endsWith("/")) dir += "/";
+                return dir + "Mindustry/";
+            }
+            return System.getProperty("user.home") + "/.local/share/Mindustry/";
+        }else if(os.contains("mac")){
+            return System.getProperty("user.home") + "/Library/Application Support/Mindustry/";
+        }
+        return "";
     }
 }

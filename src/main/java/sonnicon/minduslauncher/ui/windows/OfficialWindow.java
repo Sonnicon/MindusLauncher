@@ -1,9 +1,9 @@
-package sonnicon.minduslauncher.ui;
+package sonnicon.minduslauncher.ui.windows;
 
 import com.google.gson.internal.LinkedTreeMap;
 import sonnicon.minduslauncher.core.Vars;
 import sonnicon.minduslauncher.type.Instance;
-import sonnicon.minduslauncher.type.ModalWindow;
+import sonnicon.minduslauncher.ui.ModalWindow;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
 
 import javax.swing.*;

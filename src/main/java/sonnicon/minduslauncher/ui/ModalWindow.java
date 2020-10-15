@@ -1,4 +1,4 @@
-package sonnicon.minduslauncher.type;
+package sonnicon.minduslauncher.ui;
 
 import sonnicon.minduslauncher.core.Vars;
 

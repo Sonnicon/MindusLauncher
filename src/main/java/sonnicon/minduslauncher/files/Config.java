@@ -6,7 +6,7 @@ import sonnicon.minduslauncher.type.config.CheckboxSetting;
 import sonnicon.minduslauncher.type.config.ComboboxSetting;
 import sonnicon.minduslauncher.type.config.Configuration;
 import sonnicon.minduslauncher.type.config.Setting;
-import sonnicon.minduslauncher.type.Window;
+import sonnicon.minduslauncher.ui.Window;
 
 import javax.swing.*;
 import java.awt.*;

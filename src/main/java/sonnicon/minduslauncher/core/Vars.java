@@ -5,10 +5,10 @@ import sonnicon.minduslauncher.files.Config;
 import sonnicon.minduslauncher.files.FileIO;
 import sonnicon.minduslauncher.files.InstanceIO;
 import sonnicon.minduslauncher.type.Instance;
-import sonnicon.minduslauncher.ui.EditWindow;
-import sonnicon.minduslauncher.ui.LauncherWindow;
-import sonnicon.minduslauncher.ui.OfficialWindow;
-import sonnicon.minduslauncher.ui.SettingsWindow;
+import sonnicon.minduslauncher.ui.windows.EditWindow;
+import sonnicon.minduslauncher.ui.windows.LauncherWindow;
+import sonnicon.minduslauncher.ui.windows.OfficialWindow;
+import sonnicon.minduslauncher.ui.windows.SettingsWindow;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,9 +81,7 @@ public class Vars{
             loaded = true;
             launcherWindow.show();
         }
-
         argsHandler.loaded();
-
     }
 
     public static File createDir(File file, String child){

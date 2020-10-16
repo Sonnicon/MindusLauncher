@@ -17,6 +17,7 @@ repositories {
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.github.srikanth-lingala:zip4j:v2.6.3'
 }
 
 jar {

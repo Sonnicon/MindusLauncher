@@ -5,7 +5,6 @@ import sonnicon.minduslauncher.type.HelpCommand;
 import sonnicon.minduslauncher.type.Instance;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Logger;
 

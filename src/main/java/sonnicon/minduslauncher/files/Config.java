@@ -41,7 +41,7 @@ public class Config {
         new CheckboxSetting("selectPrevious", (Boolean) read.getOrDefault("selectPrevious", true), "Select previous instance on startup");
 
         new Configuration<>("latestTag", (String) read.getOrDefault("latestTag", ""));
-        new CheckboxSetting("popupLatestTag", (Boolean) read.getOrDefault("popupLatestTag", true), "Popup new versions on startup");
+        new CheckboxSetting("popupLatestTag", (Boolean) read.getOrDefault("popupLatestTag", false), "Popup new versions on startup");
 
         new ComboboxSetting("theme", (String) read.getOrDefault("theme", UIManager.getSystemLookAndFeelClassName()), "Theme"){
             @Override
@@ -74,6 +74,15 @@ public class Config {
                 combobox.addActionListener(e -> setValue(combobox.getSelectedItem()));
             }
         };
+
+        new CheckboxSetting("compileSource", (Boolean) read.getOrDefault("compileSource", false), "Allow adding source"){
+            @Override
+            public void setValue(Object value){
+                super.setValue(value);
+                Vars.settingsWindow.reload();
+            }
+        };
+
     }
 
     public void addConfiguration(Configuration<?> configuration){

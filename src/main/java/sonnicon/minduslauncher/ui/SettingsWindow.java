@@ -8,13 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SettingsWindow extends ModalWindow{
+    protected boolean reload = false;
 
     public SettingsWindow(){
         super("Settings");
         frame.setLayout(new BorderLayout());
 
         JPanel panelSettings = new JPanel();
-        panelSettings.setLayout(new GridLayout(4, 2));
+        panelSettings.setLayout(new GridLayout(Vars.config.settings().length, 2));
         frame.add(panelSettings);
 
         for(Setting<?> s : Vars.config.settings()){
@@ -27,17 +28,19 @@ public class SettingsWindow extends ModalWindow{
         panelButtons.setLayout(new GridLayout(1, 2));
 
         panelButtons.add(runnableButton("OK", () -> {
-                frame.setVisible(false);
-                Vars.config.write();
+            if(reload){
+                JOptionPane.showMessageDialog(frame, "Restart MindusLauncher to apply some settings.");
+            }
+            frame.setVisible(false);
+            Vars.config.write();
         }));
 
         panelButtons.add(runnableButton("Cancel", () ->
-                frame.setVisible(false)
+            frame.setVisible(false)
         ));
 
         frame.add(BorderLayout.SOUTH, panelButtons);
     }
-
     @Override
     protected int defaultWidth() {
         return 400;
@@ -57,5 +60,9 @@ public class SettingsWindow extends ModalWindow{
 
     public void show(){
         frame.setVisible(true);
+    }
+
+    public void reload(){
+        reload = true;
     }
 }

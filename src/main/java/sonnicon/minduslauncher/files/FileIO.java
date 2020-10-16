@@ -1,10 +1,13 @@
 package sonnicon.minduslauncher.files;
 
 import sonnicon.minduslauncher.core.Vars;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import sonnicon.minduslauncher.type.Instance;
+
+import javax.swing.*;
+import java.io.*;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -56,6 +59,40 @@ public class FileIO{
         }catch(IOException ex){
             Logger.getLogger(getClass().getName()).warning(ex.toString());
             return null;
+        }
+    }
+
+    public static File fileFromURL(String url){
+        String filename = url.substring(url.lastIndexOf("/"));
+        File target = new File(Vars.tempDir, filename);
+        try{
+            ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream());
+            FileOutputStream fos = new FileOutputStream(target);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            fos.close();
+            rbc.close();
+            return target;
+        }catch(Exception ex){
+            Logger.getLogger(Instance.class.getName()).warning(ex.toString());
+            return null;
+        }
+    }
+
+    public static void compileMindustry(File zip){
+        if((JOptionPane.showConfirmDialog(Vars.launcherWindow.getFrame(), "This may take a while. Are you sure you want to continue?", "Are you sure?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION))
+            return;
+        try{
+            File out = new File(Vars.tempDir, zip.getName().substring(0, zip.getName().indexOf(".")));
+            out.mkdirs();
+            new net.lingala.zip4j.ZipFile(zip).extractAll(out.getPath());
+            File dir = new File(out, out.list()[0]);
+            Process p = Runtime.getRuntime().exec(new File(dir, (System.getProperty("os.name").toLowerCase().contains("win") ? "/gradlew.bat" : "./gradlew")).getPath() + " desktop:dist", null, dir);
+            while(p.isAlive()){
+                Thread.sleep(1000);
+            }
+            new Instance(new File(dir, "desktop/build/libs/").listFiles()[0]);
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
     }
 }

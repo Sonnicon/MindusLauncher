@@ -2,6 +2,7 @@ package sonnicon.minduslauncher.ui;
 
 import com.google.gson.internal.LinkedTreeMap;
 import sonnicon.minduslauncher.core.Vars;
+import sonnicon.minduslauncher.files.FileIO;
 import sonnicon.minduslauncher.type.FrameWindow;
 import sonnicon.minduslauncher.type.Instance;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -68,6 +71,38 @@ public class LauncherWindow extends FrameWindow{
             String url = JOptionPane.showInputDialog("Enter JAR download URL:");
             if(url != null && !url.isEmpty()) Instance.instanceFromURL(url);
         }, false));
+        if((boolean) Vars.config.get("compileSource")){
+            panelButtons.add(runnableButton("Add Source ZIP", () -> {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new FileFilter(){
+                    @Override
+                    public boolean accept(File f){
+                        return f.getPath().endsWith(".zip");
+                    }
+
+                    @Override
+                    public String getDescription(){
+                        return ".zip";
+                    }
+                });
+                if(fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION){
+                    File target = new File(Vars.tempDir, fileChooser.getSelectedFile().getName());
+                    try{
+                        Files.copy(fileChooser.getSelectedFile().toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    }catch(IOException e){
+                        e.printStackTrace();
+                    }
+                    FileIO.compileMindustry(target);
+                }
+            }, false));
+            panelButtons.add(runnableButton("Add Source URL", () -> {
+                String url = JOptionPane.showInputDialog("Enter source download URL:");
+                if(url != null && !url.isEmpty()){
+                    FileIO.compileMindustry(FileIO.fileFromURL(url));
+                }
+            }, false));
+        }
+
         panelButtons.add(new JSeparator());
 
         if(Desktop.isDesktopSupported()) {

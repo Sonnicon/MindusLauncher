@@ -1,6 +1,7 @@
 package sonnicon.minduslauncher.type;
 
 import sonnicon.minduslauncher.core.Vars;
+import sonnicon.minduslauncher.files.FileIO;
 import sonnicon.minduslauncher.ui.LogWindow;
 
 import javax.swing.table.DefaultTableModel;
@@ -56,19 +57,7 @@ public class Instance{
     }
 
     public static Instance instanceFromURL(String url){
-        String filename = url.substring(url.lastIndexOf("/"));
-        File target = new File(Vars.tempDir, filename);
-        try{
-            ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream());
-            FileOutputStream fos = new FileOutputStream(target);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            fos.close();
-            rbc.close();
-            return new Instance(target);
-        }catch(Exception ex){
-            Logger.getLogger(Instance.class.getName()).warning(ex.toString());
-            return null;
-        }
+        return new Instance(FileIO.fileFromURL(url));
     }
 
     public void addToTable(){

@@ -1,7 +1,7 @@
-package sonnicon.minduslauncher.ui;
+package sonnicon.minduslauncher.ui.windows;
 
 import sonnicon.minduslauncher.core.Vars;
-import sonnicon.minduslauncher.type.ModalWindow;
+import sonnicon.minduslauncher.ui.ModalWindow;
 import sonnicon.minduslauncher.type.config.Setting;
 
 import javax.swing.*;

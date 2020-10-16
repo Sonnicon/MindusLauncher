@@ -1,6 +1,6 @@
-package sonnicon.minduslauncher.ui;
+package sonnicon.minduslauncher.ui.windows;
 
-import sonnicon.minduslauncher.type.FrameWindow;
+import sonnicon.minduslauncher.ui.FrameWindow;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Logger;
 
 public class LogWindow extends FrameWindow{
 
@@ -48,20 +49,26 @@ public class LogWindow extends FrameWindow{
         BufferedReader inp = new BufferedReader(new InputStreamReader(process.getInputStream()));
         BufferedReader err = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         new Thread(() -> {
-            while(process.isAlive() && frame.isDisplayable()){
-                try{
-                    boolean b = inp.ready();
-                    if(b || err.ready()){
-                        StyleConstants.setForeground(style, b ? Color.BLACK : Color.RED);
-                        document.insertString(document.getLength(), (b ? inp.readLine() : err.readLine()) + "\n", style);
-                        log.setCaretPosition(document.getLength());
-                    }else{
-                        Thread.sleep(500);
-                    }
-                }catch(InterruptedException | IOException | BadLocationException ignored){}
-            }
-            if(!process.isAlive()){
-                buttonKill.setEnabled(false);
+            try{
+                while(process.isAlive() && frame.isDisplayable()){
+                    try{
+                        boolean b = inp.ready();
+                        if(b || err.ready()){
+                            StyleConstants.setForeground(style, b ? Color.BLACK : Color.RED);
+                            document.insertString(document.getLength(), (b ? inp.readLine() : err.readLine()) + "\n", style);
+                            log.setCaretPosition(document.getLength());
+                        }else{
+                            Thread.sleep(500);
+                        }
+                    }catch(InterruptedException ignored){}
+                }
+                if(!process.isAlive()){
+                    buttonKill.setEnabled(false);
+                    StyleConstants.setForeground(style, Color.black);
+                    document.insertString(document.getLength(), "Process exited with exit code " + process.exitValue(), style);
+                }
+            }catch(IOException | BadLocationException ex){
+                Logger.getLogger(getClass().getName()).warning(ex.toString());
             }
         }).start();
     }

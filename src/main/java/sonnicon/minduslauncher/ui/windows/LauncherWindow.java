@@ -1,9 +1,9 @@
-package sonnicon.minduslauncher.ui;
+package sonnicon.minduslauncher.ui.windows;
 
 import com.google.gson.internal.LinkedTreeMap;
 import sonnicon.minduslauncher.core.Vars;
 import sonnicon.minduslauncher.files.FileIO;
-import sonnicon.minduslauncher.type.FrameWindow;
+import sonnicon.minduslauncher.ui.FrameWindow;
 import sonnicon.minduslauncher.type.Instance;
 import sonnicon.minduslauncher.ui.component.UneditableTable;
 import sonnicon.minduslauncher.ui.model.InstanceListSelectionModel;
@@ -28,7 +28,6 @@ public class LauncherWindow extends FrameWindow{
     public final UneditableTable tableInstance;
 
     private final ArrayList<AbstractButton> editButtons = new ArrayList<>();
-    private File datadir;
 
     public LauncherWindow(){
         super("MindusLauncher");
@@ -184,6 +183,9 @@ public class LauncherWindow extends FrameWindow{
     JMenuItem openFolderButton(String name){
         JMenuItem button = new JMenuItem(name);
         button.addActionListener(a -> desktopOpenData(name));
+        if(FileIO.getDatadir() == null || !FileIO.getDatadir().exists()){
+            button.setEnabled(false);
+        }
         return button;
     }
 
@@ -200,39 +202,15 @@ public class LauncherWindow extends FrameWindow{
     }
 
     private void desktopOpenData(String name){
-        if(datadir == null){
-            String dataDirPath = getDataDirPath();
-            if(dataDirPath.length() == 0) return;
-            datadir = new File(dataDirPath);
-        }
-        desktopOpen(new File(datadir, name.toLowerCase()));
+        desktopOpen(new File(FileIO.getDatadir(), name.toLowerCase()));
     }
 
-    private void desktopOpen(File dir){
-        try{
+    private void desktopOpen(File dir) {
+        try {
             Desktop.getDesktop().open(dir);
-        }catch(IOException ex){
+        } catch (IOException ex) {
             Logger.getLogger(getClass().getName()).warning(ex.toString());
             JOptionPane.showMessageDialog(frame, "Error opening directory.\n" + ex.getMessage());
-        }
-    }
-
-    private String getDataDirPath(){
-        String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")){
-            return System.getenv("AppData") + "\\\\Mindustry";
-        }else if(os.contains("nix") || os.contains("nux") || os.contains("aix")){
-            if (System.getenv("XDG_DATA_HOME") != null) {
-                String dir = System.getenv("XDG_DATA_HOME");
-                if (!dir.endsWith("/")) dir += "/";
-                return dir + "Mindustry/";
-            }
-            return System.getProperty("user.home") + "/.local/share/Mindustry/";
-        }else if(os.contains("mac")){
-            return System.getProperty("user.home") + "/Library/Application Support/Mindustry/";
-        }else{
-            JOptionPane.showMessageDialog(frame, "Unknown save data location.");
-            return "";
         }
     }
 

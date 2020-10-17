@@ -5,7 +5,6 @@ import sonnicon.minduslauncher.core.Vars;
 import sonnicon.minduslauncher.type.Instance;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 @SuppressWarnings("unchecked")
@@ -19,7 +18,8 @@ public class InstanceIO{
             if(!data.exists() || !data.canRead()) continue;
             try{
                 JsonReader reader = new JsonReader(new FileReader(data));
-                new Instance(Vars.gson.fromJson(reader, HashMap.class), f);
+                Instance i = Vars.gson.fromJson(reader, Instance.class);
+                i.init(f);
                 reader.close();
             }catch(Exception ex){
                 Logger.getLogger(getClass().getName()).warning(ex.toString());
@@ -28,18 +28,13 @@ public class InstanceIO{
     }
 
     public void saveInstanceJson(Instance instance){
-        HashMap<String, String> map = new HashMap<>();
-        map.put("name", instance.name);
-        map.put("version", instance.version);
-        map.put("cmdargs", instance.cmdArgs);
-        map.put("mindustryargs", instance.mindustryArgs);
-        map.put("jar", instance.jar.getName());
         try{
             FileWriter writer = new FileWriter(new File(instance.file, "instance.json"));
-            Vars.gson.toJson(map, writer);
+            Vars.gson.toJson(instance, writer);
             writer.close();
         }catch(IOException ex){
             Logger.getLogger(getClass().getName()).warning(ex.toString());
         }
+
     }
 }

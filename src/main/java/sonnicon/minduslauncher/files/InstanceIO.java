@@ -35,6 +35,5 @@ public class InstanceIO{
         }catch(IOException ex){
             Logger.getLogger(getClass().getName()).warning(ex.toString());
         }
-
     }
 }

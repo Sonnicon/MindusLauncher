@@ -6,18 +6,24 @@ import sonnicon.minduslauncher.ui.windows.LogWindow;
 
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Logger;
 
 public class Instance{
-    public String name;
-    public String version;
-    public String cmdArgs = "";
-    public String mindustryArgs = "";
+    public @InstanceEditable(displayName = "Name") String name;
+    public @InstanceEditable(displayName = "Version") String version;
+    public @InstanceEditable(displayName = "Cmd Args") String cmdArgs = "";
+    public @InstanceEditable(displayName = "Mindustry Args") String mindustryArgs = "";
     public File jar;
     public transient File file;
+
+    public static final Field[] fields = Arrays.stream(Instance.class.getDeclaredFields()).filter(field -> field.isAnnotationPresent(InstanceEditable.class)).toArray(Field[]::new);
 
     public Instance(){
         Vars.instances.add(this);
@@ -82,5 +88,10 @@ public class Instance{
         }catch(IOException ex){
             Logger.getLogger(getClass().getName()).warning(ex.toString());
         }
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface InstanceEditable{
+        String displayName() default "unknown";
     }
 }

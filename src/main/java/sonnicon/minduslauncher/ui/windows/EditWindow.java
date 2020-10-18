@@ -10,6 +10,7 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -24,7 +25,12 @@ public class EditWindow extends ModalWindow{
         super("Edit Instance");
         frame.setLayout(new BorderLayout());
 
-        tableEdit = new JTable(new Object[][]{{"Name", ""}, {"Version", ""}, {"Cmd Args", ""}, {"Mindustry Args", ""}}, new String[]{"Name", "Value"});
+        Object[][] rows = new Object[Instance.fields.length][2];
+        for(int i = 0; i < rows.length; i++){
+            rows[i] = new Object[]{Instance.fields[i].getAnnotation(Instance.InstanceEditable.class).displayName(), ""};
+        }
+
+        tableEdit = new JTable(rows, new String[]{"Name", "Value"});
         tableEdit.getTableHeader().setReorderingAllowed(false);
         tableEdit.setColumnSelectionAllowed(false);
         JScrollPane paneInstance = new JScrollPane(tableEdit);
@@ -35,13 +41,13 @@ public class EditWindow extends ModalWindow{
         panelButtons.setLayout(new GridLayout(0, 3));
 
         panelButtons.add(runnableButton("Apply", () -> {
-            //todo clean
             TableModel editModel = tableEdit.getModel();
 
-            target.name = (String) editModel.getValueAt(0, 1);
-            target.version = (String) editModel.getValueAt(1, 1);
-            target.cmdArgs = (String) editModel.getValueAt(2, 1);
-            target.mindustryArgs = (String) editModel.getValueAt(3, 1);
+            for(int i = 0; i < Instance.fields.length; i++){
+                try{
+                    Instance.fields[i].set(target, editModel.getValueAt(i, 1));
+                }catch(IllegalAccessException ignored){}
+            }
 
             TableModel instanceModel = Vars.launcherWindow.tableInstance.getModel();
             int index = Vars.instances.indexOf(target);
@@ -51,6 +57,7 @@ public class EditWindow extends ModalWindow{
             frame.setVisible(false);
             Vars.instanceIO.saveInstanceJson(target);
         }));
+
         panelButtons.add(runnableButton("Delete", () -> {
             if(JOptionPane.showConfirmDialog(frame, "Are you sure you want to permanently delete instance '" + target.name + "'?", "Confirm Delete", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
                 int index = Vars.instances.indexOf(target);
@@ -88,13 +95,14 @@ public class EditWindow extends ModalWindow{
         return button;
     }
 
-    public void showFor(Instance i){
-        target = i;
+    public void showFor(Instance target){
+        this.target = target;
         TableModel editModel = tableEdit.getModel();
-        editModel.setValueAt(i.name, 0, 1);
-        editModel.setValueAt(i.version, 1, 1);
-        editModel.setValueAt(i.cmdArgs, 2, 1);
-        editModel.setValueAt(i.mindustryArgs, 3, 1);
+        for(int i = 0; i < Instance.fields.length; i++){
+            try{
+                editModel.setValueAt(Instance.fields[i].get(target), i, 1);
+            }catch(IllegalAccessException ignored){}
+        }
         frame.setVisible(true);
     }
 }

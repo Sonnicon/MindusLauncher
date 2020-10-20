@@ -52,7 +52,7 @@ public class Instance{
     }
 
     public static Instance instanceFromURL(String url){
-        return new Instance(Objects.requireNonNull(FileIO.fileFromURL(url)));
+        return new Instance(FileIO.fileFromURL(url));
     }
 
     public void addToTable(){
@@ -71,15 +71,28 @@ public class Instance{
     }
 
     public void launch(){
+        launch(false);
+    }
+
+    public void launch(boolean clean){
         try{
             ProcessBuilder builder = new ProcessBuilder();
-            builder.command(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java",
-                    cmdArgs,
-                    "-cp",
-                    Vars.class.getProtectionDomain().getCodeSource().getLocation().getPath(),
-                    "sonnicon.minduslauncher.core.MindustryLauncher",
-                    jar.getAbsolutePath(),
-                    mindustryArgs);
+            String java = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            if(clean){
+                builder.command(java,
+                        cmdArgs,
+                        "-jar",
+                        jar.getPath(),
+                        mindustryArgs);
+            }else{
+                builder.command(java,
+                        cmdArgs,
+                        "-cp",
+                        Vars.class.getProtectionDomain().getCodeSource().getLocation().getPath(),
+                        "sonnicon.minduslauncher.core.MindustryLauncher",
+                        jar.getPath(),
+                        mindustryArgs);
+            }
             builder.directory(file);
 
             Process process = builder.start();

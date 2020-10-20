@@ -56,6 +56,7 @@ public class Vars{
         tempDir = createDir(rootDir, "temp");
         try{
             Files.walk(tempDir.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+            tempDir.mkdirs();
         }catch(IOException ex){
             Logger.getLogger(Vars.class.getName()).warning(ex.toString());
         }

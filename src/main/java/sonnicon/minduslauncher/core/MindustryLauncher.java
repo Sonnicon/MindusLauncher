@@ -35,7 +35,7 @@ public class MindustryLauncher{
                 modjar.close();
             }
 
-            Class c = Class.forName(mainClass, true, classloader);
+            Class c = classloader.loadClass(mainClass);
             c.getMethod("main", String[].class).invoke(null, new Object[]{Arrays.copyOfRange(args, 1, args.length)});
         }catch(Exception ex){
             Logger.getLogger(MindustryLauncher.class.getName()).severe(ex.toString());

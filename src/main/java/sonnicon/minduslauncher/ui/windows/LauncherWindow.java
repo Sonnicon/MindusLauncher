@@ -45,6 +45,7 @@ public class LauncherWindow extends FrameWindow{
         panelButtons.setLayout(new GridLayout(0, 1));
 
         panelButtons.add(runnableButton("Launch", () -> getSelected().launch(), true));
+        panelButtons.add(runnableButton("Launch Clean", () -> getSelected().launch(true), true));
         panelButtons.add(runnableButton("Edit", () -> Vars.editWindow.showFor(getSelected()), true));
         panelButtons.add(new JSeparator());
 

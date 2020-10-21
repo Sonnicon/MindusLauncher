@@ -5,10 +5,7 @@ import sonnicon.minduslauncher.files.Config;
 import sonnicon.minduslauncher.files.FileIO;
 import sonnicon.minduslauncher.files.InstanceIO;
 import sonnicon.minduslauncher.type.Instance;
-import sonnicon.minduslauncher.ui.windows.EditWindow;
-import sonnicon.minduslauncher.ui.windows.LauncherWindow;
-import sonnicon.minduslauncher.ui.windows.OfficialWindow;
-import sonnicon.minduslauncher.ui.windows.SettingsWindow;
+import sonnicon.minduslauncher.ui.windows.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +27,7 @@ public class Vars{
     public static EditWindow editWindow;
     public static OfficialWindow officialWindow;
     public static SettingsWindow settingsWindow;
+    public static ModsWindow modsWindow;
 
     public static File rootDir;
     public static File instanceDir;
@@ -74,6 +72,7 @@ public class Vars{
             editWindow = new EditWindow();
             officialWindow = new OfficialWindow();
             settingsWindow = new SettingsWindow();
+            modsWindow = new ModsWindow();
 
             for(Instance i : Vars.instances){
                 i.addToTable();

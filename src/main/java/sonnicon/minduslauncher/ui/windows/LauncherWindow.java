@@ -105,6 +105,12 @@ public class LauncherWindow extends FrameWindow{
 
         panelButtons.add(new JSeparator());
 
+        JButton buttonMods = runnableButton("Mods", () -> Vars.modsWindow.show(), false);
+        if(FileIO.getDatadir() == null || !FileIO.getDatadir().exists()){
+            buttonMods.setEnabled(false);
+        }
+        panelButtons.add(buttonMods);
+
         if(Desktop.isDesktopSupported()) {
             JPopupMenu folderMenu = new JPopupMenu();
             for(String s : new String[]{"./", "Maps", "Saves", "Schematics", "Mods"})

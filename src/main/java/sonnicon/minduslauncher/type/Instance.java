@@ -10,8 +10,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -68,6 +70,18 @@ public class Instance{
         int row = Vars.launcherWindow.tableInstance.getRowCount() - 1;
         Vars.launcherWindow.tableInstance.setRowSelectionInterval(row, row);
         Vars.launcherWindow.setEditButtonsEnabled(true);
+    }
+
+    public void delete(){
+        int index = Vars.instances.indexOf(this);
+        if(Vars.loadUI) ((DefaultTableModel) Vars.launcherWindow.tableInstance.getModel()).removeRow(index);
+        Vars.instances.remove(index);
+        try{
+            Files.walk(file.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::deleteOnExit);
+            file.deleteOnExit();
+        }catch(IOException ex){
+            Logger.getLogger(getClass().getName()).warning(ex.toString());
+        }
     }
 
     public void launch(){

@@ -3,6 +3,8 @@ package sonnicon.minduslauncher.type;
 import sonnicon.minduslauncher.core.Vars;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class Command{
@@ -13,16 +15,19 @@ public class Command{
     protected boolean hasChildValue = false;
 
     public String desc = "No description.";
+    public Function<Object, Object> function;
 
-    public Command(){
-    }
+    public Command(){}
 
-    public Command(String key, Command parent){
-        parent.addSubCommand(key, this);
-    }
-
-    public Command(String key){
-        Vars.argsHandler.addCommand(key, this);
+    public Command(Function<Object, Object> function, String key, Command... parents){
+        setFunction(function);
+        if(parents.length == 0){
+            addToRoot(key);
+        }else{
+            for(Command c : parents){
+                c.addSubCommand(key, this);
+            }
+        }
     }
 
     public final Object execute(){
@@ -54,13 +59,18 @@ public class Command{
         }
     }
 
-    public Object call(Object child){
-        return null;
+    protected Object call(Object child){
+        return function.apply(child);
     }
 
     public void addSubCommand(String key, Command c){
         if(childCommands == null) childCommands = new HashMap<>();
         childCommands.put(key, c);
+    }
+
+    public Command addToRoot(String key){
+        Vars.argsHandler.addCommand(key, this);
+        return this;
     }
 
     public Command setHasChildValue(boolean childValue){
@@ -71,6 +81,10 @@ public class Command{
     public Command setDesc(String desc){
         // epic optimization
         this.desc = desc + ".";
+        return this;
+    }
+    public Command setFunction(Function<Object, Object> function){
+        this.function = function;
         return this;
     }
 

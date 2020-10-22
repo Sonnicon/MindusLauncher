@@ -6,14 +6,15 @@ import java.util.ArrayList;
 
 public class HelpCommand extends Command{
 
-    public HelpCommand(String key){
-        super(key);
+    public HelpCommand(){
+        super();
+        addToRoot("help");
     }
 
     @Override
     public Object call(Object child){
         ArrayList<String> output = new ArrayList<>();
-        output.add("Help (command order matters):");
+        output.add("Help:");
         Vars.argsHandler.getCommands().forEach((s, c) -> {
             output.add("'-" + s + "' = " + c.desc);
             addCommands(c, output, 1);

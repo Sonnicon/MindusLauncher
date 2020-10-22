@@ -1,9 +1,11 @@
 package sonnicon.minduslauncher.core;
 
+import sonnicon.minduslauncher.files.FileIO;
 import sonnicon.minduslauncher.type.Command;
 import sonnicon.minduslauncher.type.HelpCommand;
 import sonnicon.minduslauncher.type.Instance;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -17,45 +19,41 @@ public class ArgsHandler{
 
         // create commands
 
-        new HelpCommand("help").setDesc("Displays a tree of commands with descriptions");
+        new HelpCommand().setDesc("Displays a tree of commands with descriptions");
 
-        Command launch = new Command("launch"){
-            @Override
-            public Object call(Object child){
-                if(child != null)
-                    ((Instance) child).launch();
-                return null;
-            }
-        }.setDesc("Launch the game");
+        Command instances = new Command().addToRoot("instances");
 
-        new Command("instance", launch){
-            @Override
-            public Object call(Object child){
-                for(Instance instance : Vars.instances){
-                    if(instance.file.getName().equals(child)){
-                        return instance;
-                    }
+        Command launch = new Command(child -> {
+            if(child != null)
+                ((Instance) child).launch();
+            return null;
+        }, "launch").setDesc("Launch an instance");
+
+        Command create = new Command(child -> new Instance((File) child), "create", instances).setDesc("Create an instance from a file");
+
+        Command delete = new Command(child -> {
+            ((Instance) child).delete();
+            return null;
+        }, "delete", instances).setDesc("Delete an instance");
+
+        new Command(child -> {
+            for(Instance instance : Vars.instances){
+                if(instance.file.getName().equals(child)){
+                    return instance;
                 }
-                Logger.getLogger(getClass().getName()).warning("Unable to find instance '" + child + "' for 'launch' arg");
-                return null;
             }
-        }.setHasChildValue(true).setDesc("Use an existing instance");
+            Logger.getLogger(getClass().getName()).warning("Unable to find instance '" + child);
+            return null;
+        }, "name", launch, delete   ).setHasChildValue(true).setDesc("Get an existing instance by name");
 
-        new Command("download", launch){
-            @Override
-            public Object call(Object child){
-                return Instance.instanceFromURL((String) child);
-            }
-        }.setHasChildValue(true).setDesc("Download an URL and create a new instance");
+        new Command(child -> FileIO.fileFromURL((String) child), "download", create).setHasChildValue(true).setDesc("Download a file from URL");
 
+        new Command(child -> new File((String) child), "file", create).setHasChildValue(true).setDesc("Use a file from filesystem");
 
-        new Command("noui"){
-            @Override
-            public Object call(Object child){
+        new Command(child -> {
                 Vars.loadUI = false;
                 return null;
-            }
-        }.setDesc("Don't initialize or open any UI");
+        }, "noui").setDesc("Don't initialize or open any UI");
 
         // run commands
 

@@ -1,6 +1,7 @@
 package sonnicon.minduslauncher.core;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -19,14 +20,20 @@ public class MindustryLauncher{
 
             ArrayList<URL> urls = new ArrayList<>();
             urls.add(f.toURI().toURL());
-
-
+            
             File moddir = new File(f.getParent(), "loadermods");
-            if(!moddir.exists()) moddir.mkdirs();
-            for(File mod : moddir.listFiles()){
-                urls.add(mod.toURI().toURL());
+            if(!moddir.exists()){
+                moddir.mkdirs();
+            }else{
+                for(File mod : moddir.listFiles()){
+                    urls.add(mod.toURI().toURL());
+                }
             }
-            URLClassLoader classloader = new URLClassLoader(urls.toArray(new URL[]{}));
+            URLClassLoader classloader = new URLClassLoader(urls.toArray(new URL[]{}), ClassLoader.getSystemClassLoader());
+
+            Field scl = ClassLoader.class.getDeclaredField("scl");
+            scl.setAccessible(true);
+            scl.set(null, classloader);
 
             for (File mod : moddir.listFiles()){
                 JarFile modjar = new JarFile(mod);

@@ -26,6 +26,10 @@ public abstract class Window<T extends java.awt.Window>{
         applySize();
     }
 
+    public void show(){
+        frame.setVisible(true);
+    }
+
     public static void updateAll(){
         for(Window<?> w : windows){
             w.update();

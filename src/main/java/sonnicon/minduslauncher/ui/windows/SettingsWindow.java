@@ -35,12 +35,17 @@ public class SettingsWindow extends ModalWindow{
             Vars.config.write();
         }));
 
+        panelButtons.add(runnableButton("About", () -> {
+            Vars.aboutWindow.show();
+        }));
+
         panelButtons.add(runnableButton("Cancel", () ->
             frame.setVisible(false)
         ));
 
         frame.add(BorderLayout.SOUTH, panelButtons);
     }
+
     @Override
     protected int defaultWidth() {
         return 400;
@@ -56,10 +61,6 @@ public class SettingsWindow extends ModalWindow{
         JButton button = new JButton(text);
         button.addActionListener(e -> onPress.run());
         return button;
-    }
-
-    public void show(){
-        frame.setVisible(true);
     }
 
     public void reload(){

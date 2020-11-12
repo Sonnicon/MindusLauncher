@@ -84,8 +84,9 @@ public class ModsWindow extends ModalWindow{
         }
     }
 
+    @Override
     public void show(){
         populate();
-        frame.setVisible(true);
+        super.show();
     }
 }

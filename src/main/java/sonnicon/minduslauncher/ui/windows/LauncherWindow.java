@@ -227,10 +227,6 @@ public class LauncherWindow extends FrameWindow{
         }
     }
 
-    public void show(){
-        frame.setVisible(true);
-    }
-
     public JFrame getFrame(){
         return frame;
     }

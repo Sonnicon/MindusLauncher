@@ -106,8 +106,9 @@ public class OfficialWindow extends ModalWindow{
         return ((LinkedTreeMap)arrayList.get(i)).get(name);
     }
 
+    @Override
     public void show(){
-        frame.setVisible(true);
         if(!fetched) populate();
+        super.show();
     }
 }

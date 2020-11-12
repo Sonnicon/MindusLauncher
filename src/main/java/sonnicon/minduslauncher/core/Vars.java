@@ -28,6 +28,7 @@ public class Vars{
     public static OfficialWindow officialWindow;
     public static SettingsWindow settingsWindow;
     public static ModsWindow modsWindow;
+    public static AboutWindow aboutWindow;
 
     public static File rootDir;
     public static File instanceDir;
@@ -73,6 +74,7 @@ public class Vars{
             officialWindow = new OfficialWindow();
             settingsWindow = new SettingsWindow();
             modsWindow = new ModsWindow();
+            aboutWindow = new AboutWindow();
 
             for(Instance i : Vars.instances){
                 i.addToTable();

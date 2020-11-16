@@ -12,6 +12,6 @@ Run: `gradlew run`
 Compile: `./gradlew jar`\
 Run: `./gradlew run`
 
-##License
+## License
 This project is licensed under the [MIT License](LICENSE).
 

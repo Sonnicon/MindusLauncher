@@ -14,9 +14,14 @@ public class SettingsWindow extends ModalWindow{
         super("Settings");
         frame.setLayout(new BorderLayout());
 
+
         JPanel panelSettings = new JPanel();
+        JScrollPane pane = new JScrollPane(panelSettings);
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
         panelSettings.setLayout(new GridLayout(Vars.config.settings().length, 2));
-        frame.add(panelSettings);
+        frame.add(pane);
 
         for(Setting<?> s : Vars.config.settings()){
             s.label(panelSettings);

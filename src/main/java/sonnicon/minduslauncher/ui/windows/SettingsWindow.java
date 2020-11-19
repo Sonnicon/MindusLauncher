@@ -40,10 +40,6 @@ public class SettingsWindow extends ModalWindow{
             Vars.config.write();
         }));
 
-        panelButtons.add(runnableButton("About", () -> {
-            Vars.aboutWindow.show();
-        }));
-
         panelButtons.add(runnableButton("Cancel", () ->
             frame.setVisible(false)
         ));

@@ -11,6 +11,8 @@ import sonnicon.minduslauncher.ui.model.InstanceListSelectionModel;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -22,6 +24,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class LauncherWindow extends FrameWindow{
@@ -34,23 +37,17 @@ public class LauncherWindow extends FrameWindow{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        tableInstance = new UneditableTable(new String[]{"Name", "Version"});
-        tableInstance.setColumnSelectionAllowed(false);
-        tableInstance.setSelectionModel(new InstanceListSelectionModel());
-        JScrollPane paneInstance = new JScrollPane(tableInstance);
-        paneInstance.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        frame.add(BorderLayout.CENTER, paneInstance);
 
-        JPanel panelButtons = new JPanel();
-        panelButtons.setLayout(new GridLayout(0, 1));
+        JMenuBar bar = new JMenuBar();
+        frame.setJMenuBar(bar);
 
-        panelButtons.add(runnableButton("Launch", () -> getSelected().launch(), true));
-        panelButtons.add(runnableButton("Launch Clean", () -> getSelected().launch(true), true));
-        panelButtons.add(runnableButton("Edit", () -> Vars.editWindow.showFor(getSelected()), true));
-        panelButtons.add(new JSeparator());
+        JMenu menuAdd = new JMenu("Add");
+        bar.add(menuAdd);
 
-        panelButtons.add(runnableButton("Add Official", () -> Vars.officialWindow.show(), false));
-        panelButtons.add(runnableButton("Add Jar", () -> {
+        menuItemAndListener(menuAdd, "Official", actionEvent ->
+                Vars.officialWindow.show());
+
+        menuItemAndListener(menuAdd, "JAR File", actionEvent ->{
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileFilter(){
                 @Override
@@ -66,13 +63,18 @@ public class LauncherWindow extends FrameWindow{
             if(fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION){
                 new Instance(fileChooser.getSelectedFile());
             }
-        }, false));
-        panelButtons.add(runnableButton("Add Jar URL", () -> {
+        });
+
+        menuItemAndListener(menuAdd, "JAR from URL", actionEvent -> {
             String url = JOptionPane.showInputDialog("Enter JAR download URL:");
             if(url != null && !url.isEmpty()) Instance.instanceFromURL(url);
-        }, false));
+        });
+
         if((boolean) Vars.config.get("compileSource")){
-            panelButtons.add(runnableButton("Add Source ZIP", () -> {
+            JMenu menuSource = new JMenu("Sources");
+            menuAdd.add(menuSource);
+
+            menuItemAndListener(menuSource, "ZIP File", actionEvent -> {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileFilter(new FileFilter(){
                     @Override
@@ -94,15 +96,41 @@ public class LauncherWindow extends FrameWindow{
                     }
                     FileIO.compileMindustry(target);
                 }
-            }, false));
-            panelButtons.add(runnableButton("Add Source URL", () -> {
+            });
+
+            menuItemAndListener(menuSource, "ZIP from URL", actionEvent -> {
                 String url = JOptionPane.showInputDialog("Enter source download URL:");
                 if(url != null && !url.isEmpty()){
                     FileIO.compileMindustry(FileIO.fileFromURL(url));
                 }
-            }, false));
+            });
         }
 
+        JMenuItem menuSettings = new JMenuItem("Settings");
+        bar.add(menuSettings);
+        menuSettings.setMaximumSize(new Dimension(28, 20));
+        menuSettings.addActionListener(actionEvent -> Vars.settingsWindow.show());
+
+        JMenuItem menuAbout = new JMenuItem("About");
+        bar.add(menuAbout);
+        menuSettings.setMaximumSize(new Dimension(28, 20));
+        menuAbout.addActionListener(actionEvent -> Vars.aboutWindow.show());
+
+
+
+        tableInstance = new UneditableTable(new String[]{"Name", "Version"});
+        tableInstance.setColumnSelectionAllowed(false);
+        tableInstance.setSelectionModel(new InstanceListSelectionModel());
+        JScrollPane paneInstance = new JScrollPane(tableInstance);
+        paneInstance.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        frame.add(BorderLayout.CENTER, paneInstance);
+
+        JPanel panelButtons = new JPanel();
+        panelButtons.setLayout(new GridLayout(0, 1));
+
+        panelButtons.add(runnableButton("Launch", () -> getSelected().launch(), true));
+        panelButtons.add(runnableButton("Launch Clean", () -> getSelected().launch(true), true));
+        panelButtons.add(runnableButton("Edit", () -> Vars.editWindow.showFor(getSelected()), true));
         panelButtons.add(new JSeparator());
 
         JButton buttonMods = runnableButton("Mods", () -> Vars.modsWindow.show(), false);
@@ -128,7 +156,6 @@ public class LauncherWindow extends FrameWindow{
             panelButtons.add(folderButton);
         }
 
-        panelButtons.add(runnableButton("Settings", () -> Vars.settingsWindow.show(), false));
 
         frame.add(BorderLayout.EAST, panelButtons);
 
@@ -171,6 +198,13 @@ public class LauncherWindow extends FrameWindow{
     @Override
     protected int defaultHeight() {
         return 350;
+    }
+
+    JMenuItem menuItemAndListener(JMenu source, String name, ActionListener listener){
+        JMenuItem item = new JMenuItem(name);
+        item.addActionListener(listener);
+        source.add(item);
+        return item;
     }
 
     JButton runnableButton(String text, Runnable onPress, boolean editButton){

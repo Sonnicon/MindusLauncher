@@ -8,13 +8,12 @@ import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Instance{
@@ -91,22 +90,23 @@ public class Instance{
     public void launch(boolean clean){
         try{
             ProcessBuilder builder = new ProcessBuilder();
-            String java = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
-            if(clean){
-                builder.command(java,
-                        cmdArgs,
-                        "-jar",
-                        jar.getPath(),
-                        mindustryArgs);
-            }else{
-                builder.command(java,
-                        cmdArgs,
-                        "-cp",
-                        Vars.class.getProtectionDomain().getCodeSource().getLocation().getPath(),
-                        "sonnicon.minduslauncher.core.MindustryLauncher",
-                        jar.getPath(),
-                        mindustryArgs);
+            ArrayList<String> command = new ArrayList<>();
+            command.add(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java");
+            if(cmdArgs.length() > 0){
+                command.add(cmdArgs);
             }
+            if(clean){
+                command.add("-jar");
+            }else{
+                command.add("-cp");
+                command.add(Vars.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+                command.add("sonnicon.minduslauncher.core.MindustryLauncher");
+            }
+            command.add(jar.getPath());
+            if(mindustryArgs.length() > 0){
+                command.add(mindustryArgs);
+            }
+            builder.command(command);
             builder.directory(file);
 
             Process process = builder.start();
